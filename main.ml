@@ -4,8 +4,8 @@ open Result
 (*ocamlbuild -use-ocamlfind -package tsdl,tsdl_mixer metroidvania.byte*)
  
 let create_texture_from_surface r s = match Sdl.create_texture_from_surface r s with
-|Error (`Msg e) -> Sdl.log "Can't create texture error: %s" e; exit 1
-|Ok t -> t
+| Error (`Msg e) -> Sdl.log "Can't create texture error: %s" e; exit 1
+| Ok t -> t
 ;;
 
 let print_image r i =  match Sdl.load_bmp i with
