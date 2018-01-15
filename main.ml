@@ -16,8 +16,8 @@ let print_image r i =  match Sdl.load_bmp i with
 ;;
 
 let get_window_surface w = match Sdl.get_window_surface w with
-  | Error (`Msg e) -> Sdl.log "Can't get surface error: %s" e; exit 1
-  | Ok s -> s
+| Error (`Msg e) -> Sdl.log "Can't get surface error: %s" e; exit 1
+| Ok s -> s
 ;;
 
 let rec wait w = 
