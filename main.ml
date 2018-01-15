@@ -23,8 +23,8 @@ let get_window_surface w = match Sdl.get_window_surface w with
 let rec wait w = 
 let event = Sdl.Event.create () in 
 match Sdl.wait_event (Some(event)) with
-|Error (`Msg e) -> Sdl.log "Could not wait event: %s" e; exit 1
-|Ok () -> match Sdl.Event.(enum (get event typ )) with
+| Error (`Msg e) -> Sdl.log "Could not wait event: %s" e; exit 1
+| Ok () -> match Sdl.Event.(enum (get event typ )) with
 	  |`Quit -> Sdl.destroy_window w; Sdl.quit ()
 	  | _ -> wait w 
 ;;
