@@ -1,6 +1,6 @@
 open Tsdl
 open Result
-
+(*eval $(opam config env)*)
 (*ocamlbuild -use-ocamlfind -package tsdl,tsdl_mixer metroidvania.byte*)
 
 let result f msg = match f with
