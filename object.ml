@@ -13,6 +13,3 @@ let get_vx o = o.vx ;;
 let set_vy vy o = create (get_x o) (get_y o) (get_image o) vy (get_vx o) (get_dx o) (get_dy o) ;; 
 let set_vx vx o = create (get_x o) (get_y o) (get_image o) (get_vy o) vx (get_dx o) (get_dy o);; 
 let update_pos o x y = create x y (get_image o) (get_vy o) (get_vx o) (get_dx o) (get_dy o) ;;
-
-
-
