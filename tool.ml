@@ -12,20 +12,20 @@ let get_window_surface w = match (Sdl.get_window_surface w) with
 | Ok r -> r
 ;;
 
-let rec display_object l r =  match l with 
+let rec display_object l r c =  match l with 
 						| [] -> ()
 						| o::next -> match Sdl.load_bmp (Objet.get_image o) with
 								  | Error (`Msg e) ->  Sdl.log "Cant load image  error: %s" e; exit 1
 							      | Ok s -> let t = (create_texture_from_surface r s) in 
-											let rect = (Sdl.Rect.create (Objet.get_x o) (Objet.get_y o) (Objet.get_dx o) (Objet.get_dy o)) in 
+											let rect = (Sdl.Rect.create ((Objet.get_x o) - (Sdl.Rect.x c))  ((Objet.get_y o) - (Sdl.Rect.y c)) (Objet.get_dx o) (Objet.get_dy o)) in 
 											match Sdl.render_copy ~dst:rect r t  with
 											| Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
-											| Ok () -> Sdl.destroy_texture t; Sdl.free_surface s; display_object next r
+											| Ok () -> Sdl.destroy_texture t; Sdl.free_surface s; display_object next r c
 ;;
 
-let display_background i r =  match Sdl.load_bmp i with
+let display_background i r c =  match Sdl.load_bmp i with
   | Error (`Msg e) ->  Sdl.log "Cant load image  error: %s" e; exit 1
-  | Ok s -> let t = (create_texture_from_surface r s) in match Sdl.render_copy r t  with
+  | Ok s -> let t = (create_texture_from_surface r s) in match Sdl.render_copy ~src:c r t  with
 	    | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
 	    | Ok () -> Sdl.destroy_texture t; Sdl.free_surface s
 ;;
