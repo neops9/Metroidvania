@@ -1,6 +1,7 @@
 open Tsdl
 open Result
 
+
 type objet
 val create : int -> int -> string -> float -> int -> int -> int-> objet
 val get_x : objet -> int
