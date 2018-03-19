@@ -9,8 +9,12 @@ open Scene
 
 (* CTRL X / H / TAB *)
 
-let window_width = 1600;;
-let window_height = 1000;;
+(*
+	Refaire la gestion du clavier avec SDL_GetKeyState (get_keyboard_state) pour plus d'efficacité 
+*)
+
+let window_width = 1024;;
+let window_height = 768;;
 
 let camera_width = 640 ;;
 let camera_height = 480 ;;
@@ -87,12 +91,12 @@ let inAir obj s = if Objet.get_y obj = Objet.get_y (move s obj) then false else 
 let scene_move s p =
   if (Objet.get_x p) < 50 then s
   else
-    {s with object_list = List.map (move s) (Scene.get_objects s);
+    {s with object_list = List.map (move s) (List.fold_left (fun acc x -> let o_bis = Objet.set_life_time x ((Objet.get_life_time x) - 10) in if Objet.get_life_time o_bis <= 0 then acc else o_bis::acc) [] (Scene.get_objects s));
       character_list = List.map (move s) (Scene.get_characters s)} ;;
 
 let keyboard_down e s o = 
-  if e = Sdl.K.space then (Objet.set_vy o (-12.))
-  else if e = Sdl.K.up then (*if inAir o s then o else*) (Objet.set_vy o (-12.))
+  if e = Sdl.K.space then o
+  else if e = Sdl.K.up then if inAir o s then o else (Objet.set_vy o (-12.))
   else if e = Sdl.K.right then Objet.set_frame (Objet.set_vx o 10) (((Objet.get_frame o)+1) mod 5)
   else if e = Sdl.K.left then Objet.set_frame (Objet.set_vx o (-10)) (((Objet.get_frame o)+1) mod 5)
   else o				
@@ -104,10 +108,19 @@ let keyboard_up e o =
   else o
 ;;
 
+let scene_keyboard_down p e s r =
+	if e = Sdl.K.space 
+	then 
+	let bullet = Objet.create ((Objet.get_x p) + 80) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "noisette.bmp") 0. 13 10 10 0 1000 in
+	{ s with object_list = bullet::(s.object_list) }
+	else
+	s
+;;
+
 let rec wait p s r w c =
   let scene = scene_move s p in
   let pers_temp = Objet.set_vy p ((Objet.get_vy p) +. 0.5) in
-  (*let pers_img = Objet.set_image ("char"^((string_of_int) (Objet.get_frame pers_temp))^".bmp") pers_temp in*) 
+  let pers_temp = Objet.set_texture pers_temp (Tool.create_texture_from_image r ("char"^((string_of_int) (Objet.get_frame pers_temp))^".bmp")) in
   let move_pers = (move scene pers_temp) in
   move_camera c scene move_pers;
   let event = Sdl.Event.create () in
@@ -115,7 +128,7 @@ let rec wait p s r w c =
   | false -> Sdl.render_clear r; Scene.display_scene scene r c; Tool.display_object [move_pers] r c; Sdl.render_present r; wait move_pers scene r w c
   | true -> match Sdl.Event.(enum (get event typ )) with
     |`Quit -> Sdl.destroy_window w; Sdl.quit ()
-    | `Key_down -> let pers = keyboard_down (Sdl.Event.(get event keyboard_keycode)) scene move_pers in wait pers scene r w c
+    | `Key_down -> let s_bis = scene_keyboard_down move_pers (Sdl.Event.(get event keyboard_keycode)) scene r in let pers = keyboard_down (Sdl.Event.(get event keyboard_keycode)) s_bis move_pers in wait pers s_bis r w c
     | `Key_up -> let pers = keyboard_up (Sdl.Event.(get event keyboard_keycode)) move_pers in wait pers scene r w c
     | _ -> Sdl.render_clear r;  Scene.display_scene scene r c; Tool.display_object [move_pers] r c; Sdl.render_present r; wait move_pers scene r w c
 ;;
@@ -126,20 +139,9 @@ let main () = match Sdl.init Sdl.Init.video with
     | Error (`Msg e) -> Sdl.log "Create window error: %s" e; exit 1
     | Ok w -> match Sdl.create_renderer ~flags:Sdl.Renderer.(accelerated + presentvsync) w with
       | Error (`Msg e) ->  Sdl.log "Can't create renderer error: %s" e; exit 1
-      | Ok r -> (*Sdl.set_window_resizable w true;*)
-	 let ground_texture = Tool.create_texture_from_image r "ground.bmp" in
-	 let caisse_texture = Tool.create_texture_from_image r "caisse.bmp" in
-	 let ground = Objet.create 0 (1000 + 430) ground_texture 0. 0 800 50 0 in (* taille fenetre + position dans la scene*)
-	 let ground2 = Objet.create 800 (1000 + 430) ground_texture 0. 0 800 50 0 in (* taille fenetre + position dans la scene*)
-	 let tronc = Objet.create (250 )  (1000 + 230) (Tool.create_texture_from_image r "tronc.bmp") 0. 0 50 200 0 in
-	 let touffe = Objet.create (225) (1150) (Tool.create_texture_from_image r "feuille.bmp") 0. 0 100 80 0 in
-	 let caisse = Objet.create 50 700 caisse_texture 0. 0 120 80 0 in
-	 let caisse2 = Objet.create 300 750 caisse_texture 0. 0 120 80 0 in
-	 let liste_objet = [ caisse; caisse2; ground; tronc; touffe; ground2] in
-	 let liste_objet2 = [ caisse2; ground; tronc; touffe ; ground2] in
-	 let personnage = Objet.create 10 200 (Tool.create_texture_from_image r "char0.bmp") 0. 0 79 100 0 in
-	 let liste_character = [] in
-	 let s = Scene.create r liste_objet liste_character "test.bmp" 1280 960 in
+      | Ok r -> Sdl.set_window_resizable w true;
+	 let personnage = Objet.create 10 200 (Tool.create_texture_from_image r "char0.bmp") 0. 0 79 100 0 1000000000 in
+	 let s = Scene.load_scene "scene1" r window_height in
 	 wait personnage s r w c
 ;; 
 
