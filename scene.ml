@@ -23,7 +23,7 @@ let create r l1 l2 tl background w h =
        width = w ;
        height = h } 
 ;;
-      
+
 let load_scene file r h =
   let f = open_in file in
   let bg = input_line f in
@@ -37,16 +37,15 @@ let load_scene file r h =
       let line = Array.of_list (String.split_on_char ';' (input_line f)) in
       if line.(0) = "c"
       then
-	    characters := (Objet.create (int_of_string line.(2)) (int_of_string line.(3)) textures.(int_of_string line.(1)) 0. 0 (int_of_string line.(4)) (int_of_string line.(5)) 0 100000000)::!characters
+	characters := (Objet.create (int_of_string line.(2)) (int_of_string line.(3)) textures.(int_of_string line.(1)) 0. 0 (int_of_string line.(4)) (int_of_string line.(5)) 0 100000000 false true true)::!characters
       else
-		objects := (Objet.create (int_of_string line.(2)) ((int_of_string line.(3)) + h) textures.(int_of_string line.(1)) 0. 0 (int_of_string line.(4)) (int_of_string line.(5)) 0 100000000)::!objects
+	objects := (Objet.create (int_of_string line.(2)) ((int_of_string line.(3)) + h) textures.(int_of_string line.(1)) 0. 0 (int_of_string line.(4)) (int_of_string line.(5)) 0 100000000 false true false)::!objects
     done; create r !objects !characters (Array.to_list textures) bg 1280 960
   with End_of_file -> close_in f; create r !objects !characters (Array.to_list textures) bg 1280 960
 ;;
-      
+
 let get_characters s = s.character_list ;;
 let get_objects s = s.object_list ;;
 let get_background s = s.background ;;
-let display_scene s r c = Tool.display_background s.background r c ; Tool.display_object (s.object_list) r c; Tool.display_object (s.character_list) r c;;
 let get_width s = s.width ;;
 let get_height s = s.height ;;
