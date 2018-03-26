@@ -13,8 +13,6 @@ val create : Sdl.renderer -> Objet.objet list -> Objet.objet list -> Sdl.texture
 val get_characters : scene -> Objet.objet list
 val get_objects : scene -> Objet.objet list
 val get_background : scene -> Sdl.texture
-val display_scene : scene -> Sdl.renderer -> Sdl.rect -> unit
 val get_width : scene -> int
 val get_height : scene -> int
 val load_scene : string -> Sdl.renderer -> int -> scene
-
