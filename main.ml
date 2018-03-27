@@ -29,15 +29,16 @@ open Bigarray
 let window_width = 1024;;
 let window_height = 768;;
 
-let keyboard_scene_actions p s r =
+let keyboard_scene_actions s r =
   let keystates = Sdl.get_keyboard_state () in
-  if (keystates.{ Tool.scancode "a" } <> 0) then begin
+  let p = (get_player s) in
+  if (keystates.{ Tool.scancode "a" } <> 0 && ((get_bullet_time p) <= 0)) then begin
     if Objet.is_flip p then 
       let bullet = Objet.create ((Objet.get_x p) - 10) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. (-13) 10 10 0 1000 false false false in
-      { s with object_list = bullet::(s.object_list) }
+      { s with player = { p with bullet_time = 10 } ; object_list = bullet::(s.object_list) }
     else
       let bullet = Objet.create ((Objet.get_x p) + 80) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. 13 10 10 0 1000 false false false in
-      { s with object_list = bullet::(s.object_list) }
+      { s with player = { p with bullet_time = 10 } ; object_list = bullet::(s.object_list) }
   end
   else
     s
@@ -61,7 +62,9 @@ let keyboard_player_actions p =
 
 let rec wait p s r w c =
   let p = keyboard_player_actions (Movement.move_object s (Objet.update p r)) in
-  let s = keyboard_scene_actions p (Movement.move_scene s p) r in
+  let s = { s with player = p } in
+  let s = keyboard_scene_actions (Movement.move_scene s p) r in
+  let p = get_player s in
   Camera.move c s p;
   let event = Sdl.Event.create () in
   match Sdl.poll_event (Some(event)) with
@@ -81,9 +84,9 @@ let main () = match Sdl.init Sdl.Init.video with
       | Error (`Msg e) ->  Sdl.log "Can't create renderer error: %s" e; exit 1
       | Ok r -> Sdl.set_window_resizable w true;
 	let personnage = Objet.create 10 200 (Tool.create_texture_from_image r "images/char0.bmp") 0. 0 79 100 0 1000000000 false true true in
-	let scene = Scene.load_scene "level/scene1" r window_height in
+	let scene = Scene.load_scene personnage "level/scene1" r window_height in
 	let camera = Camera.create (Sdl.Rect.create 0 0 640 480) window_width window_height in
-	wait personnage scene r w camera
+	wait (get_player scene) scene r w camera
 ;;
 
 let () = main () ;;
