@@ -15,7 +15,7 @@ open Bigarray
    TODO:
 
    - Animation de saut
-   - Gérer la cadence de tir
+   - Gérer la cadence de tir : FAIT
    - Changement de scène
    - Vie
    - Adversaire
@@ -61,6 +61,7 @@ let keyboard_player_actions p =
 ;;
 
 let rec wait p s r w c =
+  Sdl.delay 10l ;
   let p = keyboard_player_actions (Movement.move_object s (Objet.update p r)) in
   let s = { s with player = p } in
   let s = keyboard_scene_actions (Movement.move_scene s p) r in
