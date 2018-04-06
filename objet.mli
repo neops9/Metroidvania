@@ -14,9 +14,10 @@ type objet = { x : int;
 	       flip : bool;
 	       collision : bool;
 	       character : bool;
-	       bullet_time : int } ;;
+	       bullet_time : int;
+	       life : int } ;;
 
-val create : int -> int -> Sdl.texture -> float -> int -> int -> int-> int ->  int -> bool -> bool -> bool -> objet
+val create : int -> int -> Sdl.texture -> float -> int -> int -> int-> int ->  int -> bool -> bool -> bool -> int -> objet
 val get_x : objet -> int
 val get_frame : objet -> int
 val get_dx : objet -> int
@@ -40,3 +41,4 @@ val is_flip : objet -> bool
 val is_collision : objet -> bool
 val is_character : objet -> bool
 val get_bullet_time : objet -> int
+val get_life : objet -> int
