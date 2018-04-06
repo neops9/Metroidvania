@@ -34,10 +34,10 @@ let keyboard_scene_actions s r =
   let p = (get_player s) in
   if (keystates.{ Tool.scancode "a" } <> 0 && ((get_bullet_time p) <= 0)) then begin
     if Objet.is_flip p then 
-      let bullet = Objet.create ((Objet.get_x p) - 10) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. (-13) 10 10 0 1000 false false false in
+      let bullet = Objet.create ((Objet.get_x p) - 10) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. (-13) 10 10 0 1000 false false false 0 in
       { s with player = { p with bullet_time = 10 } ; object_list = bullet::(s.object_list) }
     else
-      let bullet = Objet.create ((Objet.get_x p) + 80) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. 13 10 10 0 1000 false false false in
+      let bullet = Objet.create ((Objet.get_x p) + 80) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. 13 10 10 0 1000 false false false 0 in
       { s with player = { p with bullet_time = 10 } ; object_list = bullet::(s.object_list) }
   end
   else
@@ -84,7 +84,7 @@ let main () = match Sdl.init Sdl.Init.video with
     | Ok w -> match Sdl.create_renderer ~flags:Sdl.Renderer.(accelerated + presentvsync) w with
       | Error (`Msg e) ->  Sdl.log "Can't create renderer error: %s" e; exit 1
       | Ok r -> Sdl.set_window_resizable w true;
-	let personnage = Objet.create 10 200 (Tool.create_texture_from_image r "images/char0.bmp") 0. 0 79 100 0 1000000000 false true true in
+	let personnage = Objet.create 10 200 (Tool.create_texture_from_image r "images/char0.bmp") 0. 0 79 100 0 1000000000 false true true 3 in
 	let scene = Scene.load_scene personnage "level/scene1" r window_height in
 	let camera = Camera.create (Sdl.Rect.create 0 0 640 480) window_width window_height in
 	wait (get_player scene) scene r w camera
