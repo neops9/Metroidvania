@@ -46,7 +46,7 @@ let keyboard_scene_actions s r =
 
 let keyboard_player_actions p = 
   let keystates = Sdl.get_keyboard_state () in
-  if (keystates.{ Tool.scancode "up" } <> 0) && not (Objet.is_in_air p) then
+  if (keystates.{ Tool.scancode "up" } <> 0) && not (Objet.is_in_air p) && (Objet.get_vy p) = 0. then
     { p with in_air = true; vy = -12. }
   else if keystates.{ Tool.scancode "left" } <> 0 then
     { p with vx = -10; frame = (((Objet.get_frame p)+1) mod 25); flip = true }

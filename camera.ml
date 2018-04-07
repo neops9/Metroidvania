@@ -12,7 +12,7 @@ let move camera scene player =
     begin
       let save_y = Sdl.Rect.y camera.rect in
       Sdl.Rect.set_x camera.rect 0 ; 
-      Sdl.Rect.set_y camera.rect (((Objet.get_y player)) - camera.window_height/2) ; 
+      Sdl.Rect.set_y camera.rect (((Objet.get_y player)) - camera.window_height/4) ; 
       if Sdl.Rect.y camera.rect >= 0
       then
 	begin
@@ -29,7 +29,7 @@ let move camera scene player =
       then
 	begin
 	  Sdl.Rect.set_x camera.rect ((Scene.get_width scene) - (Sdl.Rect.w camera.rect)) ;
-	  Sdl.Rect.set_y camera.rect (((Objet.get_y player)) - camera.window_height/2) ;
+	  Sdl.Rect.set_y camera.rect (((Objet.get_y player)) - camera.window_height/4) ;
 	  if Sdl.Rect.y camera.rect < 0
 	  then
 	    Sdl.Rect.set_y camera.rect 0
@@ -40,7 +40,7 @@ let move camera scene player =
 	end	  
       else
 	begin
-	  Sdl.Rect.set_y camera.rect (((Objet.get_y player)) - camera.window_height/2 -50) ;
+	  Sdl.Rect.set_y camera.rect (((Objet.get_y player)) - camera.window_height/4 -50) ;
 	  if Sdl.Rect.y camera.rect < 0
 	  then
 	    Sdl.Rect.set_y camera.rect 0
