@@ -28,15 +28,15 @@ ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o tool.cmi tool.mli # cached
 # Target: main.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o main.cmo main.ml # cached
 # Target: camera.ml.depends, tags: { package(tsdl,tsdl_mixer), extension:ml, file:camera.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package tsdl,tsdl_mixer -modules camera.ml > camera.ml.depends
+ocamlfind ocamldep -package tsdl,tsdl_mixer -modules camera.ml > camera.ml.depends # cached
+# Target: camera.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:camera.cmo, file:camera.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o camera.cmo camera.ml # cached
 # Target: display.ml.depends, tags: { package(tsdl,tsdl_mixer), extension:ml, file:display.ml, ocaml, ocamldep, quiet }
 ocamlfind ocamldep -package tsdl,tsdl_mixer -modules display.ml > display.ml.depends # cached
 # Target: display.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:display.cmo, file:display.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o display.cmo display.ml # cached
 # Target: movement.ml.depends, tags: { package(tsdl,tsdl_mixer), extension:ml, file:movement.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package tsdl,tsdl_mixer -modules movement.ml > movement.ml.depends # cached
-# Target: movement.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:movement.cmo, file:movement.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o movement.cmo movement.ml # cached
+ocamlfind ocamldep -package tsdl,tsdl_mixer -modules movement.ml > movement.ml.depends
 # Target: objet.ml.depends, tags: { package(tsdl,tsdl_mixer), extension:ml, file:objet.ml, ocaml, ocamldep, quiet }
 ocamlfind ocamldep -package tsdl,tsdl_mixer -modules objet.ml > objet.ml.depends # cached
 # Target: objet.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:objet.cmo, file:objet.ml, implem, ocaml, quiet }
@@ -49,8 +49,8 @@ ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o scene.cmo scene.ml # cached
 ocamlfind ocamldep -package tsdl,tsdl_mixer -modules tool.ml > tool.ml.depends # cached
 # Target: tool.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:tool.cmo, file:tool.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o tool.cmo tool.ml # cached
-# Target: camera.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:camera.cmo, file:camera.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o camera.cmo camera.ml
+# Target: movement.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:movement.cmo, file:movement.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o movement.cmo movement.ml
 # Target: main.byte, tags: { package(tsdl,tsdl_mixer), byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet }
 ocamlfind ocamlc -linkpkg -package tsdl,tsdl_mixer tool.cmo objet.cmo scene.cmo camera.cmo display.cmo movement.cmo main.cmo -o main.byte
 # Compilation successful.

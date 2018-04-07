@@ -6,7 +6,7 @@ open Tool
 let rec collision sce o l =
   match l with
   | [] -> false
-  | x::s -> if not (Objet.is_collision o) && (Objet.is_character x) then false else if Sdl.has_intersection (objet_to_rect o) (objet_to_rect x) && ((Objet.is_collision x) || (not (Objet.is_collision o) && not (Objet.is_character x))) then true else collision sce o s
+  | x::s -> if (Objet.get_life_time) o <= 1000 && Sdl.has_intersection (objet_to_rect o) (objet_to_rect x) && not (Objet.is_character x) && (Objet.is_collision x) then true else if (Objet.get_life_time) o > 1000 && Sdl.has_intersection (objet_to_rect o) (objet_to_rect x) && ((Objet.is_collision x) || (not (Objet.is_collision o) && not (Objet.is_character x))) then true else collision sce o s
 ;;
 
 let move_object s o =
