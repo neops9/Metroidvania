@@ -40,6 +40,11 @@ let move_object s o =
 ;;
 
 let move_scene s p =
+  if (Objet.get_x p > (Scene.get_width s) + 300) then
+    Scene.change_scene s (Scene.get_next_scene s) p 10
+  else if (Objet.get_x p < 0) then
+    Scene.change_scene s (Scene.get_prev_scene s) p 2280
+  else
   {s with object_list = List.map (move_object s) (List.fold_left (fun acc x -> let o_bis = Objet.set_life_time x ((Objet.get_life_time x) - 10) in if Objet.get_life_time o_bis <= 0 then acc else o_bis::acc) [] (Scene.get_objects s));
     character_list = List.map (move_object s) (Scene.get_characters s)} 
 ;;

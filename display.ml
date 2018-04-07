@@ -17,18 +17,21 @@ let rec display_object l r c =  match l with
 ;;
 
 let rec display_personnage p r c = 
-     let rect = (Sdl.Rect.create ((Objet.get_x p) - (Sdl.Rect.x c))  ((Objet.get_y p) - (Sdl.Rect.y c)) (Objet.get_dx p) (Objet.get_dy p)) in
-     let c1 = Objet.create ((Sdl.Rect.x c) + 15) ((Sdl.Rect.y c) + 15) (Tool.create_texture_from_image r "images/life.bmp") 0. 0 50 50 0 1000000000 false true true 0 in
-     let c2 = Objet.create ((Sdl.Rect.x c) + 70) ((Sdl.Rect.y c) + 15) (Tool.create_texture_from_image r "images/life.bmp") 0. 0 50 50 0 1000000000 false true true 0 in
-     let c3 = Objet.create ((Sdl.Rect.x c) + 130) ((Sdl.Rect.y c) + 15) (Tool.create_texture_from_image r "images/life.bmp") 0. 0 50 50 0 1000000000 false true true 0 in
+  let rect = (Sdl.Rect.create ((Objet.get_x p) - (Sdl.Rect.x c))  ((Objet.get_y p) - (Sdl.Rect.y c)) (Objet.get_dx p) (Objet.get_dy p)) in
+  let coeurs = ref [] in
+  let offset = ref 15 in
+  for i = 1 to (Objet.get_life p) do
+    coeurs := (Objet.create ((Sdl.Rect.x c) + !offset) ((Sdl.Rect.y c) + 15) (Tool.create_texture_from_image r "images/life.bmp") 0. 0 50 50 0 1000000000 false true true 0)::(!coeurs);
+    offset := !offset + 60
+  done;
      if Objet.is_flip p then
        match Sdl.render_copy_ex ~dst:rect r (Objet.get_texture p) 0. None Sdl.Flip.horizontal with
        | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
-       | Ok () -> display_object [c1;c2;c3] r c
+       | Ok () -> display_object !coeurs r c
      else
        match Sdl.render_copy ~dst:rect r (Objet.get_texture p)  with
        | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
-       | Ok () -> display_object [c1;c2;c3] r c
+       | Ok () -> display_object !coeurs r c
 ;;
 
 let display_background t r c =
