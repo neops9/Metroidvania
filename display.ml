@@ -2,6 +2,7 @@ open Tsdl
 open Tool
 open Scene
 open Menu
+open Bouton
 
 let rec display_object l r c =  match l with 
   | [] -> ()
@@ -53,7 +54,11 @@ let rec display_boutons bl r = match bl with
      let rect = (Sdl.Rect.create (Bouton.get_x b) (Bouton.get_y b) (Bouton.get_dx b) (Bouton.get_dy b)) in
        match Sdl.render_copy ~dst:rect r (Bouton.get_texture b)  with
        | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
-       | Ok () -> display_boutons next r
+       | Ok () -> if Bouton.est_courant b
+                  then
+                    let ligne = Sdl.Rect.create (Bouton.get_x b) ((Bouton.get_y b) + 73) (Bouton.get_dx b) 5 in
+                      Sdl.set_render_draw_color r 249 143 51 0; Sdl.render_fill_rect r (Some ligne); display_boutons next r
+                  else display_boutons next r
 ;;
 
 let display_menu m r =
