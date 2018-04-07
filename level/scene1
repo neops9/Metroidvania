@@ -1,6 +1,11 @@
 images/bg.bmp
 images/caisse.bmp;images/ground1.bmp;images/water1.bmp;images/ground2.bmp;images/ground3.bmp;images/ground4.bmp;images/ground5.bmp;images/mushroom1.bmp;images/mushroom2.bmp;images/fleche.bmp;images/roche.bmp;images/tree1.bmp
 ;level/scene2
+o;0;-77;873;77;77;true
+o;0;-77;796;77;77;true
+o;0;-77;719;77;77;true
+o;0;-77;642;77;77;true
+o;0;-77;565;77;77;true
 o;0;300;873;77;77;true
 o;0;377;873;77;77;true
 o;0;338;796;77;77;true

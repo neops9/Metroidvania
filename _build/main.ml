@@ -16,11 +16,8 @@ open Menu
    TODO:
 
    - Animation de saut
-   - Gérer la cadence de tir : FAIT
-   - Changement de scène
-   - Vie
+
    - Adversaire
-   - Menu
    - animation de tir
    - living time : trouver une solution pour pas avoir à mettre le time to live des gens
    qui reste tout le temps à 10000000000
@@ -67,32 +64,44 @@ let rec wait p s r w c =
   let s = { s with player = p } in
   let s = keyboard_scene_actions (Movement.move_scene s p) r in
   let p = get_player s in
-  Camera.move c s p;
+  if (Objet.get_life p) = 0 then
+    let menu = Menu.load_menu r in
+    Display.display_menu menu r; menu_loop menu w r
+  else
+    begin
+      Camera.move c s p;
+      let event = Sdl.Event.create () in
+      match Sdl.poll_event (Some(event)) with
+      | false -> Display.display_game p s r c; 
+                 wait p s r w c
+      | true -> match Sdl.Event.(enum (get event typ )) with
+                | `Quit -> Sdl.destroy_renderer r; Sdl.destroy_window w; Sdl.quit ()
+                | _ -> Display.display_game p s r c; 
+                       wait p s r w c
+    end
+and
+menu_loop m w r =
   let event = Sdl.Event.create () in
-  match Sdl.poll_event (Some(event)) with
-  | false -> Display.display_game p s r c; 
-             wait p s r w c
-  | true -> match Sdl.Event.(enum (get event typ )) with
-              |`Quit -> Sdl.destroy_renderer r; Sdl.destroy_window w; Sdl.quit ()
-            | _ -> Display.display_game p s r c; 
-                   wait p s r w c
-;;
-
-let rec menu_loop m w r =
-  let event = Sdl.Event.create () in
-  match Sdl.poll_event (Some(event)) with
-  | false -> menu_loop m w r
-  | true -> match Sdl.Event.(enum (get event typ )) with
+  match Sdl.wait_event (Some(event)) with
+  | Error (`Msg e) -> menu_loop m w r
+  | Ok() -> match Sdl.Event.(enum (get event typ )) with
             | `Quit -> Sdl.destroy_renderer r; Sdl.destroy_window w; Sdl.quit ()
-            | `Key_down -> if Sdl.Event.(get event keyboard_keycode) = Sdl.K.return then begin
-               let personnage = Objet.create 10 200 (Tool.create_texture_from_image r "images/char0.bmp") 0. 0 79 100 0 1000000000 false true true 3 in
-	                   let scene = Scene.load_scene personnage "level/scene1" r window_height in
-	                   let camera = Camera.create (Sdl.Rect.create 0 0 640 480) window_width window_height in
-                           Menu.destroy_menu m; wait (get_player scene) scene r w camera
+            | `Key_down -> if Sdl.Event.(get event keyboard_keycode) = Sdl.K.return then
+                             begin
+                               match Menu.get_action m with
+                               | "Jouer" ->
+                                  let personnage = Objet.create 10 800 (Tool.create_texture_from_image r "images/char0.bmp") 0. 0 79 100 0 1000000000 false true true 3 in
+	                          let scene = Scene.load_scene personnage "level/scene1" r window_height in
+	                          let camera = Camera.create (Sdl.Rect.create 0 0 640 480) window_width window_height in
+                                  Menu.destroy_menu m; wait (get_player scene) scene r w camera
+                               | "Quitter" -> Sdl.destroy_renderer r; Sdl.destroy_window w; Sdl.quit ()
+                               | _ -> menu_loop m w r
                              end
-                           else
+                           else if Sdl.Event.(get event keyboard_keycode) = Sdl.K.up || Sdl.Event.(get event keyboard_keycode) = Sdl.K.down then
+                             let m = Menu.update_boutons m in
                              Display.display_menu m r; menu_loop m w r
-            | _ -> Display.display_menu m r; menu_loop m w r
+                           else menu_loop m w r
+            | _ -> menu_loop m w r
 ;;
 
 let main () = match Sdl.init Sdl.Init.video with
@@ -103,7 +112,6 @@ let main () = match Sdl.init Sdl.Init.video with
                        | Error (`Msg e) ->  Sdl.log "Can't create renderer error: %s" e; exit 1
                        | Ok r -> Sdl.set_window_resizable w true;
                                  let menu = Menu.load_menu r in
-                                 menu_loop menu w r
-;;
+                                 Display.display_menu menu r; menu_loop menu w r
 
 let () = main () ;;
