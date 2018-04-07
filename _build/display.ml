@@ -1,6 +1,7 @@
 open Tsdl
 open Tool
 open Scene
+open Menu
 
 let rec display_object l r c =  match l with 
   | [] -> ()
@@ -44,6 +45,22 @@ let display_scene s r c =
   display_background (Scene.get_background s) r c ; 
   display_object (s.object_list) r c; 
   display_object (s.character_list) r c
+;;
+
+let rec display_boutons bl r = match bl with
+  | [] -> ()
+  | b::next ->
+     let rect = (Sdl.Rect.create (Bouton.get_x b) (Bouton.get_y b) (Bouton.get_dx b) (Bouton.get_dy b)) in
+       match Sdl.render_copy ~dst:rect r (Bouton.get_texture b)  with
+       | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
+       | Ok () -> display_boutons next r
+;;
+
+let display_menu m r =
+  Sdl.render_clear r;
+  match Sdl.render_copy r (Menu.get_bg m)  with
+  | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
+  | Ok () -> display_boutons (Menu.get_bouton_list m) r; Sdl.render_present r
 ;;
 
 let display_game p s r c =

@@ -64,9 +64,13 @@ let get_renderer s = s.renderer ;;
 let get_next_scene s = s.next_scene ;;
 let get_prev_scene s = s.prev_scene ;;
 
-let delete_scene s = match (get_texture_list s) with
+let delete_scene s =
+  let rec delete_scene_texture l =
+    match l with
   | [] -> ()
-  | t::s -> Sdl.destroy_texture t
+  | t::next -> Sdl.destroy_texture t; delete_scene_texture next
+  in
+  delete_scene_texture (get_texture_list s)
 ;;
 
 let change_scene s1 s2 p x = delete_scene s1 ; load_scene {p with x = x } s2 (get_renderer s1) 768

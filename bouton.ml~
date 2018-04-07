@@ -1,0 +1,10 @@
+type bouton = { nom : string; texture : Sdl.texture; x : int; y :int; dx : int; dy : int } ;;
+
+let create nom texture x y dx dy = { nom; texture; x; y; dx; dy } ;;
+let get_nom b = m.nom ;;
+let get_texture b = m.texture ;;
+let get_x b = m.x ;;
+let get_y b = m.y ;;
+let get_dx b = m.dx ;;
+let get_dy b = m.dy ;;
+
