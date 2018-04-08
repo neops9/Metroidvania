@@ -10,6 +10,7 @@ let rec collision sce o l =
 ;;
 
 let move_object s o =
+  let o = Objet.set_vy o ((Objet.get_vy o) +. 0.5) in
   let o_x = Objet.update_pos o (Objet.get_x o + Objet.get_vx o) (Objet.get_y o) in
   if collision s o_x (Scene.get_objects s) || collision s o_x (Scene.get_characters s)
   then

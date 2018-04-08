@@ -43,11 +43,11 @@ let keyboard_scene_actions s r =
   if (keystates.{ Tool.scancode "a" } <> 0 && ((get_bullet_time p) <= 0)) then begin
       Mixer.play_channel (-1) (Objet.get_sound p "throw") 0;
       if Objet.is_flip p then 
-        let bullet = Objet.create ((Objet.get_x p) - 10) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. (-13) 10 10 0 1000 false false false 0 [] in
-        { s with player = { p with bullet_time = 10 } ; object_list = bullet::(s.object_list) }
+        let bullet = Objet.create ((Objet.get_x p) - 10) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/rock.bmp") (-10.) (-8) 34 34 0 1000 false false false 0 [] in
+        { s with player = { p with bullet_time = 20 } ; object_list = bullet::(s.object_list) }
       else
-        let bullet = Objet.create ((Objet.get_x p) + 80) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. 13 10 10 0 1000 false false false 0 [] in
-        { s with player = { p with bullet_time = 10 } ; object_list = bullet::(s.object_list) }
+        let bullet = Objet.create ((Objet.get_x p) + 70) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/rock.bmp") (-10.) 8 34 34 0 1000 false false false 0 [] in
+        { s with player = { p with bullet_time = 20 } ; object_list = bullet::(s.object_list) }
     end
   else
     s
@@ -78,7 +78,6 @@ let rec wait p s r w c m =
   let p = get_player s in
   if (Objet.get_life p) = 0 then
 begin
-    Mixer.play_channel (-1) (Objet.get_sound p "gameover") 0;
     Mixer.free_music m;
     let menu = Menu.load_menu r in
     Display.display_menu menu r; menu_loop menu w r
@@ -126,9 +125,9 @@ menu_loop m w r =
 
 let main () = match Sdl.init Sdl.Init.(video + audio) with
   | Error (`Msg e) -> Sdl.log "Init error: %s" e; exit 1
-  | Ok () -> match Sdl.create_window ~w:window_width ~h:window_height "Metroidvania" Sdl.Window.opengl with
+  | Ok () -> match Sdl.create_window ~w:window_width ~h:window_height "Raccoon's Adventure" Sdl.Window.opengl with
              | Error (`Msg e) -> Sdl.log "Create window error: %s" e; exit 1
-             | Ok w -> match Sdl.create_renderer ~flags:Sdl.Renderer.(accelerated + presentvsync) w with
+             | Ok w -> Sdl.set_window_icon w (Tool.create_surface_from_image "images/mushroom1.bmp"); match Sdl.create_renderer ~flags:Sdl.Renderer.(accelerated + presentvsync) w with
                        | Error (`Msg e) ->  Sdl.log "Can't create renderer error: %s" e; exit 1
                        | Ok r -> Sdl.set_window_resizable w true;
                                  match Mixer.open_audio 44100 Sdl.Audio.s16_sys 2 2048 with

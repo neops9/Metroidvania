@@ -40,4 +40,4 @@ let get_sound o s =
   get_sound_rec o.sounds s
 ;;
 
-let update o r = if get_y o > 1000 then begin Mixer.play_channel (-1) (get_sound o "lose") 0; { o with x = 10 ; y = 840 ; life = (get_life o) - 1} end else if is_in_air o then { o with vy = o.vy +. 0.5; texture = (Tool.create_texture_from_image r "images/char3.bmp"); bullet_time = o.bullet_time - 1 } else { o with vy = o.vy +. 0.5; texture = (Tool.create_texture_from_image r ("images/char"^((string_of_int) (o.frame / 5))^".bmp")); bullet_time = o.bullet_time - 1 } ;; 
+let update o r = if get_y o > 1000 then begin Mixer.play_channel (-1) (get_sound o "lose") 0; { o with x = 10 ; y = 840 ; life = (get_life o) - 1} end else if is_in_air o then { o with texture = (Tool.create_texture_from_image r "images/char3.bmp"); bullet_time = o.bullet_time - 1 } else { o with vy = o.vy +. 0.5; texture = (Tool.create_texture_from_image r ("images/char"^((string_of_int) (o.frame / 5))^".bmp")); bullet_time = o.bullet_time - 1 } ;; 
