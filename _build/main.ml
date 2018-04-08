@@ -8,9 +8,8 @@ open Menu
 open Tsdl_mixer
 open Son
 
-(*eval $(opam config env)*)
-(*ocamlbuild -use-ocamlfind -package tsdl,tsdl_mixer main.byte*)
-
+(* eval $(opam config env) *)
+(* ocamlbuild -use-ocamlfind -package tsdl,tsdl_mixer main.byte *)
 (* CTRL X / H / TAB *)
 
 (* 
@@ -18,12 +17,14 @@ open Son
    TODO:
 
    - Animation de saut
-
-   - Adversaire
-   - animation de tir
+   - Animation lancer projectiles
+   - Trouver solutions pour ne pas se faire toucher par les projectiles qu'on lance
+   - Faire bouger + animer les adversaires ?
+   - Finir de faire les niveaux
    - living time : trouver une solution pour pas avoir à mettre le time to live des gens
-   qui reste tout le temps à 10000000000
-
+     qui reste tout le temps à 10000000000
+   - Optimisation
+   - Clignotement des projectiles quands ils passent devant les arbres (attribut a_bouge qui permet de ne rafficher que les objets qui ont bougé
  *)
 
 let window_width = 1024;;
