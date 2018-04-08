@@ -1,1 +1,1 @@
-tool.mli: Result Sdl Tsdl
+tool.mli: Mixer Result Sdl Tsdl Tsdl_mixer

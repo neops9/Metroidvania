@@ -30,16 +30,18 @@ let window_width = 1024;;
 let window_height = 768;;
 
 let sounds_list () = 
-  match Mixer.load_wav "sounds/jump.wav" with
-  | Error (`Msg e) ->  Sdl.log "Can't load sound error: %s" e; exit 1
-  | Ok m1 -> let s1 = Son.create "jump" m1 in
-  	     [s1]
+  let s1 = Son.create "jump" (Tool.load_chunk "sounds/jump.wav") in
+  let s2 = Son.create "throw" (Tool.load_chunk "sounds/throw.wav") in
+  let s3 = Son.create "lose" (Tool.load_chunk "sounds/lose.wav") in
+  let s4 = Son.create "gameover" (Tool.load_chunk "sounds/gameover.wav") in
+  [s1;s2;s3;s4]
 ;;
 
 let keyboard_scene_actions s r =
   let keystates = Sdl.get_keyboard_state () in
   let p = (get_player s) in
   if (keystates.{ Tool.scancode "a" } <> 0 && ((get_bullet_time p) <= 0)) then begin
+      Mixer.play_channel (-1) (Objet.get_sound p "throw") 0;
       if Objet.is_flip p then 
         let bullet = Objet.create ((Objet.get_x p) - 10) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. (-13) 10 10 0 1000 false false false 0 [] in
         { s with player = { p with bullet_time = 10 } ; object_list = bullet::(s.object_list) }
@@ -115,6 +117,7 @@ menu_loop m w r =
                              end
                            else if Sdl.Event.(get event keyboard_keycode) = Sdl.K.up || Sdl.Event.(get event keyboard_keycode) = Sdl.K.down then
                              let m = Menu.update_boutons m in
+			     Mixer.play_channel (-1) (Menu.get_son m) 0;
                              Display.display_menu m r; menu_loop m w r
                            else menu_loop m w r
             | _ -> menu_loop m w r

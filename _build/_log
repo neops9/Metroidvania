@@ -40,9 +40,15 @@ ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o tool.cmi tool.mli # cached
 # Target: main.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o main.cmo main.ml
 + ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o main.cmo main.ml
-File "main.ml", line 57, characters 4-56:
+File "main.ml", line 44, characters 6-59:
 Warning 10: this expression should have type unit.
-File "main.ml", line 111, characters 50-77:
+File "main.ml", line 59, characters 4-56:
+Warning 10: this expression should have type unit.
+File "main.ml", line 81, characters 4-60:
+Warning 10: this expression should have type unit.
+File "main.ml", line 114, characters 50-77:
+Warning 10: this expression should have type unit.
+File "main.ml", line 121, characters 8-50:
 Warning 10: this expression should have type unit.
 # Target: camera.ml.depends, tags: { package(tsdl,tsdl_mixer), extension:ml, file:camera.ml, ocaml, ocamldep, quiet }
 ocamlfind ocamldep -package tsdl,tsdl_mixer -modules camera.ml > camera.ml.depends # cached
