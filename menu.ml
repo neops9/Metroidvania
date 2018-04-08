@@ -1,12 +1,14 @@
 open Tsdl
 open Bouton
+open Tsdl_mixer
 
-type menu = { bg : Sdl.texture ; bouton_list : bouton list } ;;
+type menu = { bg : Sdl.texture ; bouton_list : bouton list; music : Mixer.music } ;;
 
-let create bg bouton_list = { bg ; bouton_list } ;;
+let create bg bouton_list music = { bg ; bouton_list; music } ;;
 
 let get_bouton_list m = m.bouton_list ;;
 let get_bg m = m.bg ;;
+let get_music m = m.music ;;
 
 let load_menu r =
   let bg_texture = Tool.create_texture_from_image r "images/menu.bmp" in
@@ -14,10 +16,13 @@ let load_menu r =
   let b2_texture = Tool.create_texture_from_image r "images/bouton_quitter.bmp" in
   let b1 = Bouton.create "Jouer" b1_texture 420 350 168 78 true in
   let b2 = Bouton.create "Quitter" b2_texture 403 470 207 78 false in
-  create bg_texture [b1;b2]
+  match Mixer.load_mus "music/menu.wav" with
+  | Error (`Msg e) ->  Sdl.log "Can't load music error: %s" e; exit 1
+  | Ok music -> Mixer.play_music music (-1); create bg_texture [b1;b2] music
 ;;
 
 let destroy_menu m =
+  Mixer.free_music (get_music m) ;
   Sdl.destroy_texture (get_bg m) ;
   let rec delete_bouton_menu l =
   match l with

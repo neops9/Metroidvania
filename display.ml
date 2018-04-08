@@ -3,6 +3,7 @@ open Tool
 open Scene
 open Menu
 open Bouton
+open Tsdl_mixer
 
 let rec display_object l r c =  match l with 
   | [] -> ()
@@ -23,7 +24,7 @@ let rec display_personnage p r c =
   let coeurs = ref [] in
   let offset = ref 15 in
   for i = 1 to (Objet.get_life p) do
-    coeurs := (Objet.create ((Sdl.Rect.x c) + !offset) ((Sdl.Rect.y c) + 15) (Tool.create_texture_from_image r "images/life.bmp") 0. 0 50 50 0 1000000000 false true true 0)::(!coeurs);
+    coeurs := (Objet.create ((Sdl.Rect.x c) + !offset) ((Sdl.Rect.y c) + 15) (Tool.create_texture_from_image r "images/life.bmp") 0. 0 50 50 0 1000000000 false true true 0 [])::(!coeurs);
     offset := !offset + 60
   done;
      if Objet.is_flip p then

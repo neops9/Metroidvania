@@ -5,6 +5,8 @@ open Tool
 open Scene
 open Bigarray
 open Menu
+open Tsdl_mixer
+open Son
 
 (*eval $(opam config env)*)
 (*ocamlbuild -use-ocamlfind -package tsdl,tsdl_mixer main.byte*)
@@ -27,15 +29,22 @@ open Menu
 let window_width = 1024;;
 let window_height = 768;;
 
+let sounds_list () = 
+  match Mixer.load_wav "sounds/jump.wav" with
+  | Error (`Msg e) ->  Sdl.log "Can't load sound error: %s" e; exit 1
+  | Ok m1 -> let s1 = Son.create "jump" m1 in
+  	     [s1]
+;;
+
 let keyboard_scene_actions s r =
   let keystates = Sdl.get_keyboard_state () in
   let p = (get_player s) in
   if (keystates.{ Tool.scancode "a" } <> 0 && ((get_bullet_time p) <= 0)) then begin
       if Objet.is_flip p then 
-        let bullet = Objet.create ((Objet.get_x p) - 10) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. (-13) 10 10 0 1000 false false false 0 in
+        let bullet = Objet.create ((Objet.get_x p) - 10) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. (-13) 10 10 0 1000 false false false 0 [] in
         { s with player = { p with bullet_time = 10 } ; object_list = bullet::(s.object_list) }
       else
-        let bullet = Objet.create ((Objet.get_x p) + 80) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. 13 10 10 0 1000 false false false 0 in
+        let bullet = Objet.create ((Objet.get_x p) + 80) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/noisette.bmp") 0. 13 10 10 0 1000 false false false 0 [] in
         { s with player = { p with bullet_time = 10 } ; object_list = bullet::(s.object_list) }
     end
   else
@@ -44,8 +53,9 @@ let keyboard_scene_actions s r =
 
 let keyboard_player_actions p = 
   let keystates = Sdl.get_keyboard_state () in
-  if (keystates.{ Tool.scancode "up" } <> 0) && not (Objet.is_in_air p) && (Objet.get_vy p) = 0. then
-    { p with in_air = true; vy = -12. }
+  if (keystates.{ Tool.scancode "up" } <> 0) && not (Objet.is_in_air p) && (Objet.get_vy p) = 0. then begin
+    Mixer.play_channel (-1) (Objet.get_sound p "jump") 0;
+    { p with in_air = true; vy = -12. } end
   else if keystates.{ Tool.scancode "left" } <> 0 then
     { p with vx = -10; frame = (((Objet.get_frame p)+1) mod 25); flip = true }
   else if keystates.{ Tool.scancode "right" } <> 0 then
@@ -58,26 +68,29 @@ let keyboard_player_actions p =
     p
 ;;
 
-let rec wait p s r w c =
+let rec wait p s r w c m =
   Sdl.delay 10l ;
   let p = keyboard_player_actions (Movement.move_object s (Objet.update p r)) in
   let s = { s with player = p } in
   let s = keyboard_scene_actions (Movement.move_scene s p) r in
   let p = get_player s in
   if (Objet.get_life p) = 0 then
+begin
+    Mixer.free_music m;
     let menu = Menu.load_menu r in
     Display.display_menu menu r; menu_loop menu w r
+end
   else
     begin
       Camera.move c s p;
       let event = Sdl.Event.create () in
       match Sdl.poll_event (Some(event)) with
       | false -> Display.display_game p s r c; 
-                 wait p s r w c
+                 wait p s r w c m
       | true -> match Sdl.Event.(enum (get event typ )) with
-                | `Quit -> Sdl.destroy_renderer r; Sdl.destroy_window w; Sdl.quit ()
+                | `Quit -> Mixer.free_music m; Sdl.destroy_renderer r; Sdl.destroy_window w; Mixer.quit (); Sdl.quit (); 
                 | _ -> Display.display_game p s r c; 
-                       wait p s r w c
+                       wait p s r w c m
     end
 and
 menu_loop m w r =
@@ -89,12 +102,15 @@ menu_loop m w r =
             | `Key_down -> if Sdl.Event.(get event keyboard_keycode) = Sdl.K.return then
                              begin
                                match Menu.get_action m with
-                               | "Jouer" ->
-                                  let personnage = Objet.create 10 800 (Tool.create_texture_from_image r "images/char0.bmp") 0. 0 79 100 0 1000000000 false true true 3 in
+                               | "Jouer" -> begin
+                                  let personnage = Objet.create 10 800 (Tool.create_texture_from_image r "images/char0.bmp") 0. 0 79 100 0 1000000000 false true true 3 (sounds_list ()) in
 	                          let scene = Scene.load_scene personnage "level/scene1" r window_height in
 	                          let camera = Camera.create (Sdl.Rect.create 0 0 640 480) window_width window_height in
-                                  Menu.destroy_menu m; wait (get_player scene) scene r w camera
-                               | "Quitter" -> Sdl.destroy_renderer r; Sdl.destroy_window w; Sdl.quit ()
+				  match Mixer.load_mus "music/level.wav" with
+  	     				    | Error (`Msg e) ->  Sdl.log "Can't load music error: %s" e; exit 1
+ 	     				    | Ok music -> Menu.destroy_menu m; Mixer.play_music music (-1); wait (get_player scene) scene r w camera music
+				end
+                               | "Quitter" -> Menu.destroy_menu m; Sdl.destroy_renderer r; Sdl.destroy_window w; Mixer.quit (); Sdl.quit ()
                                | _ -> menu_loop m w r
                              end
                            else if Sdl.Event.(get event keyboard_keycode) = Sdl.K.up || Sdl.Event.(get event keyboard_keycode) = Sdl.K.down then
@@ -104,14 +120,16 @@ menu_loop m w r =
             | _ -> menu_loop m w r
 ;;
 
-let main () = match Sdl.init Sdl.Init.video with
+let main () = match Sdl.init Sdl.Init.(video + audio) with
   | Error (`Msg e) -> Sdl.log "Init error: %s" e; exit 1
   | Ok () -> match Sdl.create_window ~w:window_width ~h:window_height "Metroidvania" Sdl.Window.opengl with
              | Error (`Msg e) -> Sdl.log "Create window error: %s" e; exit 1
              | Ok w -> match Sdl.create_renderer ~flags:Sdl.Renderer.(accelerated + presentvsync) w with
                        | Error (`Msg e) ->  Sdl.log "Can't create renderer error: %s" e; exit 1
                        | Ok r -> Sdl.set_window_resizable w true;
-                                 let menu = Menu.load_menu r in
-                                 Display.display_menu menu r; menu_loop menu w r
+                                 match Mixer.open_audio 44100 Sdl.Audio.s16_sys 2 2048 with
+				 | Error (`Msg e) -> Sdl.log "Can't open audio: %s" e; exit 1
+				 | Ok () -> let menu = Menu.load_menu r in
+						Display.display_menu menu r; menu_loop menu w r
 
 let () = main () ;;
