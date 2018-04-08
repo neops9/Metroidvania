@@ -43,10 +43,10 @@ let keyboard_scene_actions s r =
   if (keystates.{ Tool.scancode "a" } <> 0 && ((get_bullet_time p) <= 0)) then begin
       Mixer.play_channel (-1) (Objet.get_sound p "throw") 0;
       if Objet.is_flip p then 
-        let bullet = Objet.create ((Objet.get_x p) - 10) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/rock.bmp") (-10.) (-8) 34 34 0 1000 false false false 0 [] in
+        let bullet = Objet.create ((Objet.get_x p) - 50) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/rock.bmp") (-10.) (-8) 34 34 0 1000 false false false 0 [] true in
         { s with player = { p with bullet_time = 20 } ; object_list = bullet::(s.object_list) }
       else
-        let bullet = Objet.create ((Objet.get_x p) + 70) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/rock.bmp") (-10.) 8 34 34 0 1000 false false false 0 [] in
+        let bullet = Objet.create ((Objet.get_x p) + 100) ((Objet.get_y p) + 50) (Tool.create_texture_from_image r "images/rock.bmp") (-10.) 8 34 34 0 1000 false false false 0 [] true in
         { s with player = { p with bullet_time = 20 } ; object_list = bullet::(s.object_list) }
     end
   else
@@ -71,8 +71,8 @@ let keyboard_player_actions p =
 ;;
 
 let rec wait p s r w c m =
-  Sdl.delay 10l ;
-  let p = keyboard_player_actions (Movement.move_object s (Objet.update p r)) in
+  Sdl.delay 2l ;
+  let p = keyboard_player_actions (Movement.move_object s p (Objet.update p r)) in
   let s = { s with player = p } in
   let s = keyboard_scene_actions (Movement.move_scene s p) r in
   let p = get_player s in
@@ -105,7 +105,7 @@ menu_loop m w r =
                              begin
                                match Menu.get_action m with
                                | "Jouer" -> begin
-                                  let personnage = Objet.create 10 800 (Tool.create_texture_from_image r "images/char0.bmp") 0. 0 79 100 0 1000000000 false true true 3 (sounds_list ()) in
+                                  let personnage = Objet.create 10 800 (Tool.create_texture_from_image r "images/char0.bmp") 0. 0 79 100 0 1000000000 true true true 3 (sounds_list ()) false in
 	                          let scene = Scene.load_scene personnage "level/scene1" r window_height in
 	                          let camera = Camera.create (Sdl.Rect.create 0 0 640 480) window_width window_height in
 				  match Mixer.load_mus "music/level.wav" with

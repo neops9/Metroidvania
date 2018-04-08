@@ -46,9 +46,9 @@ let load_scene p file r h =
       let line = Array.of_list (String.split_on_char ';' (input_line f)) in
       if line.(0) = "c"
       then
-	characters := (Objet.create (int_of_string line.(2)) (int_of_string line.(3)) textures.(int_of_string line.(1)) 10. 1 (int_of_string line.(4)) (int_of_string line.(5)) 0 100000000 false true true 3 [])::!characters
+	characters := ({ (Objet.create (int_of_string line.(2)) (int_of_string line.(3)) textures.(int_of_string line.(1)) 1. 0 (int_of_string line.(4)) (int_of_string line.(5)) 0 100000000 false (bool_of_string line.(6)) true 3 [] false) with flip = true })::!characters
       else
-	objects := (Objet.create (int_of_string line.(2)) ((int_of_string line.(3))) textures.(int_of_string line.(1)) 0. 0 (int_of_string line.(4)) (int_of_string line.(5)) 0 100000000 false (bool_of_string line.(6)) false 0 [])::!objects
+	objects := (Objet.create (int_of_string line.(2)) ((int_of_string line.(3))) textures.(int_of_string line.(1)) 0. 0 (int_of_string line.(4)) (int_of_string line.(5)) 0 100000000 false (bool_of_string line.(6)) false 0 [] false)::!objects
     done; create r p !objects !characters (Array.to_list textures) bg 2000 750 prev_next_scene.(1) prev_next_scene.(0)
   with End_of_file -> close_in f; create r p !objects !characters (Array.to_list textures) bg 2000 750 prev_next_scene.(1) prev_next_scene.(0)
 ;;

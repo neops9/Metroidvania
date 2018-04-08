@@ -18,9 +18,11 @@ type objet = { x : int;
 	       character : bool;
 	       bullet_time : int;
 	       life : int;
-	       sounds : son list } ;;
+	       sounds : son list;
+	       is_bullet : bool;
+	       invulnerable : int } ;;
 
-val create : int -> int -> Sdl.texture -> float -> int -> int -> int-> int ->  int -> bool -> bool -> bool -> int -> son list -> objet
+val create : int -> int -> Sdl.texture -> float -> int -> int -> int-> int ->  int -> bool -> bool -> bool -> int -> son list -> bool -> objet
 val get_x : objet -> int
 val get_frame : objet -> int
 val get_dx : objet -> int
@@ -44,5 +46,8 @@ val objet_to_rect : objet -> Sdl.rect
 val is_flip : objet -> bool
 val is_collision : objet -> bool
 val is_character : objet -> bool
+val is_bullet : objet -> bool
 val get_bullet_time : objet -> int
 val get_life : objet -> int
+val equals : objet -> objet -> bool
+val get_invulnerable : objet -> int
