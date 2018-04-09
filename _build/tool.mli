@@ -8,3 +8,4 @@ val create_surface_from_image : string -> Sdl.surface
 val get_window_surface : Sdl.window -> Sdl.surface
 val scancode : string -> Sdl.scancode
 val load_chunk : string -> Mixer.chunk
+val load_music : string -> Mixer.music

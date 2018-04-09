@@ -4,4 +4,4 @@ open Scene
 
 val collision : scene -> objet -> objet list -> bool
 val move_object : scene -> objet -> objet -> objet
-val move_scene : scene -> objet -> scene
+val move_scene : scene -> scene

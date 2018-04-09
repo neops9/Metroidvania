@@ -28,3 +28,18 @@ let load_chunk s = match Mixer.load_wav s with
   | Error (`Msg e) ->  Sdl.log "Can't load sound error: %s" e; exit 1
   | Ok m -> m
 ;;
+
+let load_music s = match Mixer.load_mus s with
+  | Error (`Msg e) ->  Sdl.log "Can't load music error: %s" e; exit 1
+  | Ok music -> music
+;;
+
+let object_to_rect o = Sdl.Rect.create (o.x) (o.y) (o.dx) (o.dy) ;;
+
+let unit_to_rect u = Sdl.Rect.create (u.x) (u.y) (u.dx) (u.dy) ;;
+
+let rec get_sound_from_list l name =
+    match l with
+    | [] -> raise No_sound_found
+    | s::next -> if (Sound.get_name s) = name then s else get_sound_from_list next name
+;;

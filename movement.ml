@@ -3,6 +3,7 @@ open Scene
 open Objet
 open Tool
 open Tsdl_mixer
+open Sound
 
 let rec collision sce o l =
   match l with
@@ -33,7 +34,7 @@ match l with
 	    Objet.set_vy (Objet.set_in_air o false) 0.
 	  else
 	    Objet.set_vy o 0. end
-       | x::next -> if Sdl.has_intersection (objet_to_rect { o with y = ((Objet.get_y o) + int_of_float(Objet.get_vy o)) }) (objet_to_rect x) then begin Mixer.play_channel (-1) (Objet.get_sound player "jump") 0; { o with in_air = true; vy = (-10.) } end else player_collision s o player next
+       | x::next -> if Sdl.has_intersection (objet_to_rect { o with y = ((Objet.get_y o) + int_of_float(Objet.get_vy o)) }) (objet_to_rect x) then begin play_sound (Objet.get_sound player "jump"); { o with in_air = true; vy = (-10.) } end else player_collision s o player next
 ;;
 
 let move_object s p o =
@@ -74,13 +75,14 @@ let characters_action s =
   characters_throw (Scene.get_characters s) [] s
 ;;
 
-let move_scene s p =
+let move_scene s =
+  let p = get_player s in
   if (Objet.get_x p > (Scene.get_width s) + 300) then
     Scene.change_scene s (Scene.get_next_scene s) p 10
   else if (Objet.get_x p < 0) then
     Scene.change_scene s (Scene.get_prev_scene s) p 2280
   else
-    characters_action {s with object_list = List.map (move_object s p) (List.fold_left (fun acc x -> if Objet.get_life_time x > 1000 
+    characters_action {s with player = move_object s p (Objet.update p (Scene.get_renderer s)); object_list = List.map (move_object s p) (List.fold_left (fun acc x -> if Objet.get_life_time x > 1000 
 												     then x::acc 
                                                                                                      else 
                                                                                                        begin 

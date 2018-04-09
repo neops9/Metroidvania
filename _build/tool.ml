@@ -28,3 +28,8 @@ let load_chunk s = match Mixer.load_wav s with
   | Error (`Msg e) ->  Sdl.log "Can't load sound error: %s" e; exit 1
   | Ok m -> m
 ;;
+
+let load_music s = match Mixer.load_mus s with
+  | Error (`Msg e) ->  Sdl.log "Can't load music error: %s" e; exit 1
+  | Ok music -> music
+;;

@@ -1,6 +1,8 @@
 open Tsdl
 open Result
 open Objet
+open Music
+open Tsdl_mixer
 
 type scene = { player : objet; 
 		   object_list : Objet.objet list ;
@@ -11,9 +13,10 @@ type scene = { player : objet;
 	       height : int ;
                renderer : Sdl.renderer;
                next_scene : string;
-               prev_scene : string } ;;
+               prev_scene : string;
+               music : music } ;;
 
-let create r p l1 l2 tl background w h next_scene prev_scene =
+let create r p l1 l2 tl background w h next_scene prev_scene music =
   let t = match Sdl.load_bmp background with
     | Error (`Msg e) ->  Sdl.log "Cant load image  error: %s" e; exit 1
     | Ok s ->
@@ -29,10 +32,11 @@ let create r p l1 l2 tl background w h next_scene prev_scene =
        height = h;
        renderer = r;
        next_scene = next_scene;
-     prev_scene = prev_scene } 
+     prev_scene = prev_scene;
+     music = music } 
 ;;
 
-let load_scene p file r h =
+let load_scene p file r h m =
   let f = open_in file in
   let bg = input_line f in
   let texture_list = String.split_on_char ';' (input_line f) in
@@ -49,8 +53,8 @@ let load_scene p file r h =
 	characters := ({ (Objet.create (int_of_string line.(2)) (int_of_string line.(3)) textures.(int_of_string line.(1)) 1. 0 (int_of_string line.(4)) (int_of_string line.(5)) 0 100000000 false (bool_of_string line.(6)) true 3 [] false) with flip = true })::!characters
       else
 	objects := (Objet.create (int_of_string line.(2)) ((int_of_string line.(3))) textures.(int_of_string line.(1)) 0. 0 (int_of_string line.(4)) (int_of_string line.(5)) 0 100000000 false (bool_of_string line.(6)) false 0 [] false)::!objects
-    done; create r p !objects !characters (Array.to_list textures) bg 2000 750 prev_next_scene.(1) prev_next_scene.(0)
-  with End_of_file -> close_in f; create r p !objects !characters (Array.to_list textures) bg 2000 750 prev_next_scene.(1) prev_next_scene.(0)
+    done; create r p !objects !characters (Array.to_list textures) bg 2000 750 prev_next_scene.(1) prev_next_scene.(0) m
+  with End_of_file -> close_in f; create r p !objects !characters (Array.to_list textures) bg 2000 750 prev_next_scene.(1) prev_next_scene.(0) m
 ;;
 
 let get_characters s = s.character_list ;;
@@ -63,8 +67,9 @@ let get_texture_list s = s.texture_list ;;
 let get_renderer s = s.renderer ;;
 let get_next_scene s = s.next_scene ;;
 let get_prev_scene s = s.prev_scene ;;
+let get_music s = s.music ;;
 
-let delete_scene s =
+let destroy_scene s =
   let rec delete_scene_texture l =
     match l with
   | [] -> ()
@@ -73,5 +78,8 @@ let delete_scene s =
   delete_scene_texture (get_texture_list s)
 ;;
 
-let change_scene s1 s2 p x = delete_scene s1 ; load_scene {p with x = x } s2 (get_renderer s1) 768
+let change_scene s1 s2 p x = 
+  let music = (get_music s1) in
+  destroy_scene s1; 
+  load_scene {p with x = x } s2 (get_renderer s1) 768 music
 ;;

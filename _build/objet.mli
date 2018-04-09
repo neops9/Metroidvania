@@ -1,6 +1,6 @@
 open Tsdl
 open Result
-open Son
+open Sound
 open Tsdl_mixer
 
 type objet = { x : int; 
@@ -18,11 +18,12 @@ type objet = { x : int;
 	       character : bool;
 	       bullet_time : int;
 	       life : int;
-	       sounds : son list;
+	       sounds : sound list;
 	       is_bullet : bool;
-	       invulnerable : int } ;;
+	       invulnerable : int;
+	       has_moved : bool } ;;
 
-val create : int -> int -> Sdl.texture -> float -> int -> int -> int-> int ->  int -> bool -> bool -> bool -> int -> son list -> bool -> objet
+val create : int -> int -> Sdl.texture -> float -> int -> int -> int-> int ->  int -> bool -> bool -> bool -> int -> sound list -> bool -> objet
 val get_x : objet -> int
 val get_frame : objet -> int
 val get_dx : objet -> int
@@ -32,7 +33,7 @@ val get_vy : objet -> float
 val set_vy : objet -> float -> objet
 val get_vx : objet -> int
 val set_vx : objet -> int -> objet
-val get_sound : objet -> string -> Mixer.chunk
+val get_sound : objet -> string -> sound
 val update_pos : objet -> int -> int -> objet
 val set_frame : objet -> int -> objet
 val get_texture : objet -> Sdl.texture
@@ -51,3 +52,4 @@ val get_bullet_time : objet -> int
 val get_life : objet -> int
 val equals : objet -> objet -> bool
 val get_invulnerable : objet -> int
+val has_moved : objet -> bool
