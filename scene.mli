@@ -1,22 +1,32 @@
 open Tsdl
 open Result
-open Objet
+open Gameobject
+open Character
 open Music
-open Unit
+open Player
 
 type scene = { renderer : Sdl.renderer;
                width : int;
 	           height : int;
 	           background : Sdl.texture;
 	           music : music;
-			   player : unit; 
-		       gameobjects : objet list ;
-	           units : unit list ;
-	           items : objet list ;
+			   player : player; 
+		       gameobjects : gameobject list ;
+	           characters : character list ;
+	           items : gameobject list ;
                next_scene : string;
                prev_scene : string } 
+;;
   
-val create : Sdl.renderer -> unit -> objet list -> unit list -> string -> int -> int -> string -> string -> music -> scene
-val load_scene : unit -> string -> Sdl.renderer -> int -> music -> scene
+val create : Sdl.renderer -> player -> gameobject list -> character list -> gameobject list ->string -> int -> int -> string -> string -> music -> scene
+val load : player -> string -> Sdl.renderer -> int -> music -> scene
+val get_renderer : scene -> Sdl.renderer
+val get_player : scene -> player
+val get_width : scene -> int
+val get_height : scene -> int
+val display : scene -> Sdl.rect -> unit
+val update : scene -> scene
+val move : scene -> scene
 val change_scene : scene -> string -> int -> scene
-val destroy_scene : scene -> unit
+val destroy : scene -> unit
+val set_player : scene -> player -> scene

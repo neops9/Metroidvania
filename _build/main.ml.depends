@@ -1,1 +1,1 @@
-main.ml: Bigarray Camera Display Keyboard Menu Mixer Movement Music Objet Result Scene Sdl Sound Tool Tsdl Tsdl_mixer
+main.ml: Game Menu Mixer Sdl Tool Tsdl Tsdl_mixer

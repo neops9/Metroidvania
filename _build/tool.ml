@@ -1,6 +1,7 @@
 open Tsdl
-open Result
 open Tsdl_mixer
+open Result
+open Animation
 
 let create_texture_from_surface r s = match (Sdl.create_texture_from_surface r s) with
   | Error (`Msg e)  -> Sdl.log "Can't create texture error : %s" e; exit 1
@@ -32,4 +33,25 @@ let load_chunk s = match Mixer.load_wav s with
 let load_music s = match Mixer.load_mus s with
   | Error (`Msg e) ->  Sdl.log "Can't load music error: %s" e; exit 1
   | Ok music -> music
+;;
+
+exception No_sound_found ;;
+exception No_animation_found ;;
+
+let rec get_sound_from_list l name =
+    match l with
+    | [] -> raise No_sound_found
+    | s::next -> if (Sound.get_name s) = name then s else get_sound_from_list next name
+;;
+
+let rec get_animation_from_list l name =
+    match l with
+    | [] -> raise No_animation_found
+    | s::next -> if Animation.get_name s = name then s else get_animation_from_list next name
+;;
+
+let rec collision o l =
+  match l with
+  | [] -> false
+  | x::s -> if Sdl.has_intersection o x then true else collision o s 
 ;;
