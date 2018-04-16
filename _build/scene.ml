@@ -51,7 +51,7 @@ let load player file renderer height music =
       if line.(0) = "c"
       then
         let projectile = Animation.create "projectile" 34 34 [(create_texture_from_image renderer "images/rock.bmp")] (-1) (-1) in
-	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) 0 0. animation [animation] [] projectile false 3)::!characters
+	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) 0 0. animation [animation] [] projectile false 20)::!characters
       else
 	    gameobjects := (Gameobject.create "Gameobject" (int_of_string line.(2)) ((int_of_string line.(3))) 0 0. animation [animation] (bool_of_string line.(6)) false 1 (-1) [] false)::!gameobjects
     done;
@@ -80,9 +80,22 @@ let display s c =
   Player.display s.renderer c (s.player)
 ;;
 
-let update s = { s with player = Player.update s.player;
+let rec character_in_list c l = 
+  match l with
+  | [] -> false
+  | x::s -> if c = x then true else character_in_list c s
+;;
+
+let rec apply_character_damages s =
+let player_temp = s.player in
+    { s with  player = { player_temp with damaged_characters = [] }; characters = List.map (fun x -> if character_in_list x player_temp.damaged_characters then begin if x.invulnerable_time <= 0 then { x with life = x.life -1; invulnerable_time = 300} else x end else x) s.characters }
+;;
+
+let update s = 
+  let s = (apply_character_damages s) in
+  { s with player = Player.update s.player;
                         gameobjects = List.map (Gameobject.update) s.gameobjects; 
-                        characters = List.map (Character.update) s.characters;
+                        characters = List.fold_left (fun acc x -> if x.life <= 0 then acc else x::acc) [] (List.map (Character.update) (s.characters));
                         items = List.map (Gameobject.update) s.items }
 ;;
 
@@ -101,17 +114,17 @@ let change_scene s1 s2 x =
 
 let move s =
   let p = s.player in
-  if (p.x > s.width + 300) then
+  if (p.x > s.width) then
     change_scene s s.next_scene 10
   else if (p.x < 0) then
-    change_scene s s.prev_scene 2280
+    change_scene s s.prev_scene 3970
   else
     let l1 = List.fold_left (fun acc x -> if Gameobject.is_collision x then (Gameobject.gameobject_to_rect x)::acc else acc) [] s.gameobjects in
     let l2 = List.fold_left (fun acc x -> if Gameobject.is_collision x then (Gameobject.gameobject_to_rect x)::acc else acc) [] s.items in
     let l3 = List.fold_left (fun acc x -> if Character.is_collision x then (Character.character_to_rect x)::acc else acc) [] s.characters in
     let l4 = List.fold_left (fun acc x -> (Player.player_to_rect x)::acc) [] [s.player] in
     let l = List.append l4 (List.append l3 (List.append l1 l2)) in
-    { s with player = Player.move (List.append l3 (List.append l1 l2)) s.player; 
+    { s with player = Player.move (List.append l3 (List.append l1 l2)) s.characters s.player; 
              gameobjects = List.map (Gameobject.move l) s.gameobjects;                        
              characters = List.map (Character.move l) s.characters;
              items = List.map (Gameobject.move l) s.items }

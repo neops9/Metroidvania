@@ -40,17 +40,17 @@ if (o.vx = 0) && (o.vy = 0.) then o
 else
 begin
   let o_x = { o with x = o.x + o.vx } in
-  if collision (gameobject_to_rect o_x) l
+  if collision_rec (gameobject_to_rect o_x) l
   then
     if o.is_projectile then { o with life_time = 0 } else
       begin
 	    let o_y = { o with y = o.y + int_of_float(o.vy) } in
-	    if collision (gameobject_to_rect o_y) l then { o with projectiles = List.map (move l) (o.projectiles) }
+	    if collision_rec (gameobject_to_rect o_y) l then { o with projectiles = List.map (move l) (o.projectiles) }
 	    else { o_y with projectiles = List.map (move l) (o_y.projectiles) }
       end
   else
     let o_x_y = { o_x with y = o_x.y + int_of_float(o_x.vy) } in
-    if collision (gameobject_to_rect o_x_y) l then 
+    if collision_rec (gameobject_to_rect o_x_y) l then 
       begin
         if o.is_projectile then { o with life_time = 0 } else { o_x with projectiles = List.map (move l) (o_x.projectiles) }
       end

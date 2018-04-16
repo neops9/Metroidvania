@@ -5,20 +5,10 @@ CTRL X / H / TAB
 
 TODO:
 
---  FAIRE DES GETTEURS sur les attributs qui apparaissent dans plusieurs modules POUR ASSURER LA SECURITE et le fait que tout compile bien
-
-   - Animation de saut
    - Animation lancer projectiles
-   - Trouver solutions pour ne pas se faire toucher par les projectiles qu'on lance
-   - Faire bouger + animer les adversaires ?
+   - Degats projectiles (ne dois infliger des degats qu'aux objets qui ne possèdent pas le projectile)
+   - Faire bouger + animer les adversaires ? (ia)
    - Finir de faire les niveaux
-   - living time : trouver une solution pour pas avoir à mettre le time to live des gens
-     qui reste tout le temps à 10000000000
+   - Animation prise de degats
    - Optimisation
-   - Clignotement des projectiles quands ils passent devant les arbres (attribut a_bouge qui permet de ne rafficher que les objets qui ont bougé
-
-
-
-
-
-reste à mettre à jour Sound.ml sound.mli tool.ml tool.mli et faire ui.ml ui.mli avant de pouvoir commencer à debug
+   - Faire le rapport

@@ -16,4 +16,5 @@ val load_chunk : string -> Mixer.chunk
 val load_music : string -> Mixer.music
 val get_sound_from_list : sound list -> string -> sound
 val get_animation_from_list : animation list -> string -> animation
-val collision : Sdl.rect -> Sdl.rect list -> bool
+val collision : Sdl.rect -> Sdl.rect -> bool
+val collision_rec : Sdl.rect -> Sdl.rect list -> bool

@@ -75,17 +75,17 @@ let move l c =
   else
   begin
   let c_x = { c with x = c.x + c.vx } in
-  if collision (character_to_rect c_x) l
+  if collision_rec (character_to_rect c_x) l
   then
     begin
 	  let c_y = { c with y = c.y + int_of_float(c.vy) } in
-	  if collision (character_to_rect c_y) l then { c with projectiles = List.map (Gameobject.move l) (c.projectiles) }
+	  if collision_rec (character_to_rect c_y) l then { c with projectiles = List.map (Gameobject.move l) (c.projectiles) }
 	  else { c_y with projectiles = List.map (Gameobject.move l) (c_y.projectiles) }
     end
   else
     begin
       let c_x_y = { c_x with y = c_x.y + int_of_float(c_x.vy) } in
-      if collision (character_to_rect c_x_y) l then { c_x with projectiles = List.map (Gameobject.move l) (c_x.projectiles) }
+      if collision_rec (character_to_rect c_x_y) l then { c_x with projectiles = List.map (Gameobject.move l) (c_x.projectiles) }
       else { c_x_y  with projectiles = List.map (Gameobject.move l) (c_x_y.projectiles) }
     end
     end

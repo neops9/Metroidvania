@@ -22,10 +22,12 @@ type player = { name : string;
                 reload_time : int; 
                 invulnerable_time : int; 
                 in_air : bool;
-                has_moved : bool }
+                has_moved : bool;
+                heart_texture : Sdl.texture;
+                damaged_characters : character list }
 ;;
 
-val create : string -> int -> int -> int -> float -> animation -> animation list -> sound list -> animation -> bool -> int -> player
+val create : string -> int -> int -> int -> float -> animation -> animation list -> sound list -> animation -> bool -> int -> Sdl.texture -> player
 val get_life : player -> int
 val get_x : player -> int
 val get_y : player -> int
@@ -37,7 +39,7 @@ val get_texture : player -> Sdl.texture
 val is_in_air : player -> bool
 val update : player -> player
 val display : Sdl.renderer -> Sdl.rect -> player -> unit
-val move : Sdl.rect list -> player -> player
+val move : Sdl.rect list -> character list -> player -> player
 val destroy : player -> unit
 val get_current_animation : player -> animation
 val player_to_rect : player -> Sdl.rect

@@ -26,10 +26,11 @@ let get_renderer g = g.renderer ;;
 let display_user_interface r c p = 
   let offset = ref 15 in
   for i = 1 to Player.get_life p do
-    let heart_animation = Animation.create "hearth" 50 50 [(Tool.create_texture_from_image r "images/life.bmp")] (-1) (-1) in
-    let heart = Gameobject.create "heart" ((Sdl.Rect.x c) + !offset) ((Sdl.Rect.y c) + 15) 0 0. heart_animation [heart_animation] false false 1 (-1) [] false in
+    let rect_dest = Sdl.Rect.create !offset 15 50 50 in
     offset := !offset + 60;
-    Gameobject.display r c heart
+    match Sdl.render_copy ~dst:rect_dest r p.heart_texture with
+    | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
+    | Ok () -> ()
   done;
 ;;
 
@@ -138,14 +139,15 @@ and
                                  begin
                                    let renderer = Menu.get_renderer menu in
                                    let t1 = create_texture_from_image renderer "images/rock.bmp" in
-									let t2 = create_texture_from_image renderer "images/rock1.bmp" in
-									let t3 = create_texture_from_image renderer "images/rock2.bmp" in
-									let t4 = create_texture_from_image renderer "images/rock3.bmp" in
-									let t5 = create_texture_from_image renderer "images/rock4.bmp" in
-									let t6 = create_texture_from_image renderer "images/rock5.bmp" in
+								   let t2 = create_texture_from_image renderer "images/rock1.bmp" in
+							       let t3 = create_texture_from_image renderer "images/rock2.bmp" in
+								   let t4 = create_texture_from_image renderer "images/rock3.bmp" in
+								   let t5 = create_texture_from_image renderer "images/rock4.bmp" in
+								   let t6 = create_texture_from_image renderer "images/rock5.bmp" in
+								   let camera = Camera.create (Sdl.Rect.create 0 0 940 700) 1024 768 in
                                    let projectile = Animation.create "projectile" 34 34 [t1;t2;t3;t4;t5;t6] 1 (-1) in
-                                   let player = Player.create "Player" 10 600 0 2. (List.hd (player_animations renderer)) (player_animations renderer) (sounds_list ()) projectile false 3 in
-	                               let camera = Camera.create (Sdl.Rect.create 0 0 940 700) 1024 768 in
+                                   let heart_texture = (Tool.create_texture_from_image renderer "images/life.bmp") in
+                                   let player = Player.create "Player" 10 600 0 2. (List.hd (player_animations renderer)) (player_animations renderer) (sounds_list ()) projectile false 3 heart_texture in 
 				                   let music = Music.create "level1_music" (load_music "music/level.wav") in
 				                   let scene = Scene.load player "level/scene1" renderer 768 music in
   	     				           Menu.destroy g.menu;
