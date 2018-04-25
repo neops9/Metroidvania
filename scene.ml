@@ -112,20 +112,37 @@ let change_scene s1 s2 x =
   load { s1.player with x = x } s2 (get_renderer s1) 768 music
 ;;
 
+let rec move_projectiles_player p cl gl = 
+match cl, gl with
+| [], [] -> p
+| c::s, _ -> if collision_rec (player_to_rect p) (List.fold_left (fun acc o -> (gameobject_to_rect { o with x = (Gameobject.get_x o) + (Gameobject.get_vx o); y = (Gameobject.get_y o) + int_of_float((Gameobject.get_vy o)) })::acc) [] (Character.get_projectiles c)) then { p with life = p.life - 1 } else move_projectiles_player p s gl
+| _, g::s -> if collision_rec (player_to_rect p) (List.fold_left (fun acc o -> (gameobject_to_rect { o with x = (Gameobject.get_x o) + (Gameobject.get_vx o); y = (Gameobject.get_y o) + int_of_float((Gameobject.get_vy o)) })::acc) [] (Gameobject.get_projectiles g)) then { p with life = p.life - 1 } else move_projectiles_player p cl s
+;;
+
+let move_projectiles_gameobjects gl p = 
+List.map (fun g -> if collision_rec (gameobject_to_rect g) (List.fold_left (fun acc o -> (gameobject_to_rect { o with x = (Gameobject.get_x o) + (Gameobject.get_vx o); y = (Gameobject.get_y o) + int_of_float((Gameobject.get_vy o)) })::acc) [] (Player.get_projectiles p)) then { g with life = g.life - 1 } else g) gl
+;;
+
+let move_projectiles_characters cl p = 
+List.map (fun c -> if collision_rec (character_to_rect c) (List.fold_left (fun acc o -> (gameobject_to_rect { o with x = (Gameobject.get_x o) + (Gameobject.get_vx o); y = (Gameobject.get_y o) + int_of_float((Gameobject.get_vy o)) })::acc) [] (Player.get_projectiles p)) then { c with life = c.life - 1 } else c) cl
+;;
+
 let move s =
-  let p = s.player in
+  let gameobjects = move_projectiles_gameobjects s.gameobjects s.player in
+  let characters = move_projectiles_characters s.characters s.player in
+  let p = move_projectiles_player s.player s.characters s.gameobjects in
   if (p.x > s.width) then
     change_scene s s.next_scene 10
   else if (p.x < 0) then
     change_scene s s.prev_scene 3970
   else
-    let l1 = List.fold_left (fun acc x -> if Gameobject.is_collision x then (Gameobject.gameobject_to_rect x)::acc else acc) [] s.gameobjects in
+    let l1 = List.fold_left (fun acc x -> if Gameobject.is_collision x then (Gameobject.gameobject_to_rect x)::acc else acc) [] gameobjects in
     let l2 = List.fold_left (fun acc x -> if Gameobject.is_collision x then (Gameobject.gameobject_to_rect x)::acc else acc) [] s.items in
-    let l3 = List.fold_left (fun acc x -> if Character.is_collision x then (Character.character_to_rect x)::acc else acc) [] s.characters in
-    let l4 = List.fold_left (fun acc x -> (Player.player_to_rect x)::acc) [] [s.player] in
+    let l3 = List.fold_left (fun acc x -> if Character.is_collision x then (Character.character_to_rect x)::acc else acc) [] characters in
+    let l4 = List.fold_left (fun acc x -> (Player.player_to_rect x)::acc) [] [p] in
     let l = List.append l4 (List.append l3 (List.append l1 l2)) in
-    { s with player = Player.move (List.append l3 (List.append l1 l2)) s.characters s.player; 
-             gameobjects = List.map (Gameobject.move l) s.gameobjects;                        
-             characters = List.map (Character.move l) s.characters;
+    { s with player = Player.move (List.append l3 (List.append l1 l2)) characters p; 
+             gameobjects = List.map (Gameobject.move l) gameobjects;                        
+             characters = List.map (Character.move l) characters;
              items = List.map (Gameobject.move l) s.items }
 ;;

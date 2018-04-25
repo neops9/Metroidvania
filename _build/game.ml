@@ -93,10 +93,23 @@ let player_animations r =
   let j9 = create_texture_from_image r "images/jump9.bmp" in
   let j10 = create_texture_from_image r "images/jump10.bmp" in
   let j11 = create_texture_from_image r "images/jump11.bmp" in
+  let tr1 = create_texture_from_image r "images/throw1.bmp" in
+  let tr2 = create_texture_from_image r "images/throw2.bmp" in
+  let tr3 = create_texture_from_image r "images/throw3.bmp" in
+  let tr4 = create_texture_from_image r "images/throw4.bmp" in
+  let tr5 = create_texture_from_image r "images/throw5.bmp" in
+  let tr6 = create_texture_from_image r "images/throw6.bmp" in
+  let tr7 = create_texture_from_image r "images/throw7.bmp" in
+  let tr8 = create_texture_from_image r "images/throw8.bmp" in
+  let tr9 = create_texture_from_image r "images/throw9.bmp" in
+  let tr10 = create_texture_from_image r "images/throw10.bmp" in
+  let tr11 = create_texture_from_image r "images/throw11.bmp" in
+  let tr12 = create_texture_from_image r "images/throw12.bmp" in
   let a1 = Animation.create "idle" 79 100 [i1;i2;i3;i4;i5;i6;i7;i8;i9;i10;i11] 3 (-1) in
   let a2 = Animation.create "run" 79 100 [t1;t2;t3;t4;t5;t6;t7;t8;t9;t10;t11;t12] 1 (-1) in
   let a3 = Animation.create "jump" 79 100 [j1;j2;j3;j4;j5;j6;j7;j8;j9;j10;j11] 5 1 in
-  [a1; a2; a3]
+  let a4 = Animation.create "throw" 80 100 [tr1;tr2;tr3;tr4;tr5;tr6;tr7;tr8;tr9;tr10;tr11;tr12] 2 1 in
+  [a1; a2; a3; a4]
 ;;
 
 let rec game_loop g s c =

@@ -43,3 +43,4 @@ val move : Sdl.rect list -> character list -> player -> player
 val destroy : player -> unit
 val get_current_animation : player -> animation
 val player_to_rect : player -> Sdl.rect
+val get_projectiles : player -> gameobject list

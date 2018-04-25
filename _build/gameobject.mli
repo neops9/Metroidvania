@@ -28,6 +28,8 @@ val get_current_animation : gameobject -> animation
 val get_life_time : gameobject -> int
 val get_dx : gameobject -> int
 val get_dy : gameobject -> int
+val get_vx : gameobject -> int
+val get_vy : gameobject -> float
 val get_texture : gameobject -> Sdl.texture
 val update : gameobject -> gameobject
 val display : Sdl.renderer -> Sdl.rect -> gameobject -> unit
@@ -35,3 +37,4 @@ val move : Sdl.rect list -> gameobject -> gameobject
 val destroy : gameobject -> unit
 val gameobject_to_rect : gameobject -> Sdl.rect
 val is_collision : gameobject -> bool
+val get_projectiles : gameobject -> gameobject list

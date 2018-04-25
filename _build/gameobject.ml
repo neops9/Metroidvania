@@ -26,12 +26,15 @@ let create name x y vx vy current_animation animations collision flip life life_
 
 let get_x o = o.x ;;
 let get_y o = o.y ;;
+let get_vx o = o.vx ;;
+let get_vy o = o.vy ;;
 let get_current_animation o = o.current_animation ;;
 let get_life_time o = o.life_time ;;
 let get_dx c = c.current_animation.dx ;;
 let get_dy c = c.current_animation.dy ;;
 let get_texture c = Animation.get_texture c.current_animation ;;
 let is_collision o = o.collision ;;
+let get_projectiles o = o.projectiles ;;
 
 let gameobject_to_rect o = Sdl.Rect.create o.x o.y o.current_animation.dx o.current_animation.dy ;;
 

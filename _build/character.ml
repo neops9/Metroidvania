@@ -29,11 +29,14 @@ let create name x y vx vy current_animation animations sounds projectile flip li
 
 let get_x c = c.x ;;
 let get_y c = c.y ;;
+let get_vx c = c.vx ;;
+let get_vy c = c.vy ;;
 let get_dx c = c.current_animation.dx ;;
 let get_dy c = c.current_animation.dy ;;
 let get_current_animation c = c.current_animation ;;
 let get_texture c = Animation.get_texture c.current_animation ;;
 let is_collision c = c.collision ;;
+let get_projectiles c = c.projectiles ;;
 
 let character_to_rect c = Sdl.Rect.create c.x c.y c.current_animation.dx c.current_animation.dy ;;
 
@@ -41,10 +44,22 @@ let rec update_projectiles c = { c with projectiles = List.fold_left (fun acc x 
 
 let update c =
 let c = update_projectiles c in
+if c.reload_time <= 0 then
+begin
+let projectile = Gameobject.create "projectile" (c.x + 100) (c.y + 50) (8) (-10.1) c.projectile [c.projectile] true false 1 1000 [] true in
+let c = { c with reload_time = 50; projectiles = projectile::(c.projectiles) } in
 if not (c.vy = 0.) then 
   { c with vy = c.vy +. 0.5; current_animation = Animation.update c.current_animation; projectile = Animation.update c.projectile; reload_time = c.reload_time - 1; invulnerable_time = c.invulnerable_time - 10 } 
 else 
   { c with current_animation = Animation.update c.current_animation; reload_time = c.reload_time - 1; projectile = Animation.update c.projectile; invulnerable_time = c.invulnerable_time - 10 } 
+  end
+  else
+  begin
+  if not (c.vy = 0.) then 
+  { c with vy = c.vy +. 0.5; current_animation = Animation.update c.current_animation; projectile = Animation.update c.projectile; reload_time = c.reload_time - 1; invulnerable_time = c.invulnerable_time - 10 } 
+else 
+  { c with current_animation = Animation.update c.current_animation; reload_time = c.reload_time - 1; projectile = Animation.update c.projectile; invulnerable_time = c.invulnerable_time - 10 } 
+  end
 ;;
 
 let rec display r c o =  
@@ -71,7 +86,7 @@ let play_action c =
 ;;
 
 let move l c =
-  if (c.vx = 0) && (c.vy = 0.) then c
+  if (c.vx = 0) && (c.vy = 0.) then { c with projectiles = List.map (Gameobject.move l) (c.projectiles) }
   else
   begin
   let c_x = { c with x = c.x + c.vx } in

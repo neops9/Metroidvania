@@ -5,8 +5,6 @@ CTRL X / H / TAB
 
 TODO:
 
-   - Animation lancer projectiles
-   - Degats projectiles (ne dois infliger des degats qu'aux objets qui ne possèdent pas le projectile)
    - Faire bouger + animer les adversaires ? (ia)
    - Finir de faire les niveaux
    - Animation prise de degats

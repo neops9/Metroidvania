@@ -39,7 +39,8 @@ let get_texture p = Animation.get_texture p.current_animation ;;
 let is_in_air p = p.in_air ;;
 let get_vy p = p.vy ;;
 let get_sounds p = p.sounds ;;
-let get_current_animation c = c.current_animation ;;
+let get_current_animation p = p.current_animation ;;
+let get_projectiles p = p.projectiles ;;
 
 let player_to_rect p = Sdl.Rect.create p.x p.y p.current_animation.dx p.current_animation.dy ;;
 
