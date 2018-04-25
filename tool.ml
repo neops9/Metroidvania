@@ -50,7 +50,7 @@ let rec get_animation_from_list l name =
     | s::next -> if Animation.get_name s = name then s else get_animation_from_list next name
 ;;
 
-let rec collision o1 o2 = if Sdl.has_intersection o1 o2 then true else false ;;
+let rec collision o1 o2 = if Sdl.Rect.h o1 != Sdl.Rect.h o2 && Sdl.Rect.w o1 != Sdl.Rect.w o2 && Sdl.has_intersection o1 o2 then true else false ;;
 
 let rec collision_rec o l =
   match l with

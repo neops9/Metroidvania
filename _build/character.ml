@@ -37,6 +37,7 @@ let get_current_animation c = c.current_animation ;;
 let get_texture c = Animation.get_texture c.current_animation ;;
 let is_collision c = c.collision ;;
 let get_projectiles c = c.projectiles ;;
+let get_name c = c.name ;;
 
 let character_to_rect c = Sdl.Rect.create c.x c.y c.current_animation.dx c.current_animation.dy ;;
 
@@ -48,14 +49,14 @@ if c.reload_time <= 0 then
 begin
 let projectile = Gameobject.create "projectile" (c.x + 100) (c.y + 50) (8) (-10.1) c.projectile [c.projectile] true false 1 1000 [] true in
 let c = { c with reload_time = 50; projectiles = projectile::(c.projectiles) } in
-if not (c.vy = 0.) then 
+if c.vy != 0. then 
   { c with vy = c.vy +. 0.5; current_animation = Animation.update c.current_animation; projectile = Animation.update c.projectile; reload_time = c.reload_time - 1; invulnerable_time = c.invulnerable_time - 10 } 
 else 
   { c with current_animation = Animation.update c.current_animation; reload_time = c.reload_time - 1; projectile = Animation.update c.projectile; invulnerable_time = c.invulnerable_time - 10 } 
   end
   else
   begin
-  if not (c.vy = 0.) then 
+  if c.vy != 0. then 
   { c with vy = c.vy +. 0.5; current_animation = Animation.update c.current_animation; projectile = Animation.update c.projectile; reload_time = c.reload_time - 1; invulnerable_time = c.invulnerable_time - 10 } 
 else 
   { c with current_animation = Animation.update c.current_animation; reload_time = c.reload_time - 1; projectile = Animation.update c.projectile; invulnerable_time = c.invulnerable_time - 10 } 
@@ -94,13 +95,13 @@ let move l c =
   then
     begin
 	  let c_y = { c with y = c.y + int_of_float(c.vy) } in
-	  if collision_rec (character_to_rect c_y) l then { c with projectiles = List.map (Gameobject.move l) (c.projectiles) }
+	  if collision_rec (character_to_rect c_y) l then { c with vy = 0.; projectiles = List.map (Gameobject.move l) (c.projectiles) }
 	  else { c_y with projectiles = List.map (Gameobject.move l) (c_y.projectiles) }
     end
   else
     begin
       let c_x_y = { c_x with y = c_x.y + int_of_float(c_x.vy) } in
-      if collision_rec (character_to_rect c_x_y) l then { c_x with projectiles = List.map (Gameobject.move l) (c_x.projectiles) }
+      if collision_rec (character_to_rect c_x_y) l then { c_x with vy = 0.; projectiles = List.map (Gameobject.move l) (c_x.projectiles) }
       else { c_x_y  with projectiles = List.map (Gameobject.move l) (c_x_y.projectiles) }
     end
     end

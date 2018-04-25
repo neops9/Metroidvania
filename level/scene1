@@ -1,5 +1,5 @@
 images/bg.bmp
-images/caisse.bmp;images/ground1.bmp;images/water1.bmp;images/ground2.bmp;images/ground3.bmp;images/ground4.bmp;images/ground5.bmp;images/mushroom1.bmp;images/mushroom2.bmp;images/fleche.bmp;images/roche.bmp;images/tree1.bmp;images/char0.bmp
+images/caisse.bmp;images/ground1.bmp;images/water1.bmp;images/ground2.bmp;images/ground3.bmp;images/ground4.bmp;images/ground5.bmp;images/mushroom1.bmp;images/mushroom2.bmp;images/fleche.bmp;images/roche.bmp;images/tree1.bmp;images/goblin.bmp
 ;level/scene2
 o;0;-77;653;77;77;true
 o;0;-77;576;77;77;true
@@ -47,7 +47,9 @@ o;1;3840;730;128;128;true
 o;1;3968;730;128;128;true
 o;1;4096;730;128;128;true
 o;1;4224;730;128;128;true
-c;12;1500;630;80;100;true
+o;0;1800;653;77;77;true
+o;0;3200;653;77;77;true
+c;12;2700;300;100;91;true
 o;11;850;149;282;301;false
 o;7;680;691;50;41;true
 o;10;1124;396;90;54;true

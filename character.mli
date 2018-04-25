@@ -40,3 +40,4 @@ val play_action : character -> character
 val destroy : character -> unit
 val character_to_rect : character -> Sdl.rect
 val is_collision : character -> bool
+val get_name : character -> string

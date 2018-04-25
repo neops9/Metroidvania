@@ -51,7 +51,7 @@ let load player file renderer height music =
       if line.(0) = "c"
       then
         let projectile = Animation.create "projectile" 34 34 [(create_texture_from_image renderer "images/rock.bmp")] (-1) (-1) in
-	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) 0 0. animation [animation] [] projectile false 3)::!characters
+	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) (-1) (1.) animation [animation] [] projectile false 3)::!characters
       else
 	    gameobjects := (Gameobject.create "Gameobject" (int_of_string line.(2)) ((int_of_string line.(3))) 0 0. animation [animation] (bool_of_string line.(6)) false 1 (-1) [] false)::!gameobjects
     done;
@@ -83,12 +83,12 @@ let display s c =
 let rec character_in_list c l = 
   match l with
   | [] -> false
-  | x::s -> if c = x then true else character_in_list c s
+  | x::s -> if (Character.get_name c) = (Character.get_name x) && (Character.get_dx c) = (Character.get_dx x) && (Character.get_dy c) = (Character.get_dy x) then true else character_in_list c s
 ;;
 
 let rec apply_character_damages s =
 let player_temp = s.player in
-    { s with  player = { player_temp with damaged_characters = [] }; characters = List.map (fun x -> if character_in_list x player_temp.damaged_characters then begin if x.invulnerable_time <= 0 then { x with life = x.life -1; invulnerable_time = 300} else x end else x) s.characters }
+    { s with  player = { player_temp with damaged_characters = [] }; characters = List.map (fun x -> if character_in_list x player_temp.damaged_characters then begin if x.invulnerable_time <= 0 then { x with life = x.life -1; invulnerable_time = 300 } else x end else x) s.characters }
 ;;
 
 let update s = 

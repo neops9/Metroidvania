@@ -102,7 +102,7 @@ let collision_with_character l p cl damage =
 ;;
 
 let move l cl c =
-if (c.vx = 0) && (c.vy = 0.) then c
+if (c.vx = 0) && (c.vy = 0.) then { c with projectiles = List.map (Gameobject.move l) (c.projectiles) }
 else begin
   let c_x = { c with x = c.x + c.vx } in
   if collision_rec (player_to_rect c_x) l
