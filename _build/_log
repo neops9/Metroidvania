@@ -67,6 +67,8 @@ ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o menu.cmo menu.ml # cached
 ocamlfind ocamldep -package tsdl,tsdl_mixer -modules tool.ml > tool.ml.depends # cached
 # Target: tool.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:tool.cmo, file:tool.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o tool.cmo tool.ml # cached
+# Target: animation.ml.depends, tags: { package(tsdl,tsdl_mixer), extension:ml, file:animation.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package tsdl,tsdl_mixer -modules animation.ml > animation.ml.depends
 # Target: button.ml.depends, tags: { package(tsdl,tsdl_mixer), extension:ml, file:button.ml, ocaml, ocamldep, quiet }
 ocamlfind ocamldep -package tsdl,tsdl_mixer -modules button.ml > button.ml.depends # cached
 # Target: button.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:button.cmo, file:button.ml, implem, ocaml, quiet }
@@ -96,13 +98,15 @@ ocamlfind ocamldep -package tsdl,tsdl_mixer -modules player.ml > player.ml.depen
 # Target: player.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:player.cmo, file:player.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o player.cmo player.ml # cached
 # Target: scene.ml.depends, tags: { package(tsdl,tsdl_mixer), extension:ml, file:scene.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package tsdl,tsdl_mixer -modules scene.ml > scene.ml.depends
+ocamlfind ocamldep -package tsdl,tsdl_mixer -modules scene.ml > scene.ml.depends # cached
+# Target: scene.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:scene.cmo, file:scene.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o scene.cmo scene.ml # cached
 # Target: sound.ml.depends, tags: { package(tsdl,tsdl_mixer), extension:ml, file:sound.ml, ocaml, ocamldep, quiet }
 ocamlfind ocamldep -package tsdl,tsdl_mixer -modules sound.ml > sound.ml.depends # cached
 # Target: sound.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:sound.cmo, file:sound.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o sound.cmo sound.ml # cached
-# Target: scene.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:scene.cmo, file:scene.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o scene.cmo scene.ml
+# Target: animation.cmo, tags: { package(tsdl,tsdl_mixer), byte, compile, extension:cmo, extension:ml, file:animation.cmo, file:animation.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package tsdl,tsdl_mixer -o animation.cmo animation.ml
 # Target: main.byte, tags: { package(tsdl,tsdl_mixer), byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet }
 ocamlfind ocamlc -linkpkg -package tsdl,tsdl_mixer animation.cmo sound.cmo button.cmo tool.cmo gameobject.cmo character.cmo player.cmo camera.cmo music.cmo scene.cmo keyboard.cmo menu.cmo game.cmo main.cmo -o main.byte
 # Compilation successful.
