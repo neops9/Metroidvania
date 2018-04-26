@@ -50,10 +50,12 @@ let rec get_animation_from_list l name =
     | s::next -> if Animation.get_name s = name then s else get_animation_from_list next name
 ;;
 
-let rec collision o1 o2 = if Sdl.Rect.h o1 != Sdl.Rect.h o2 && Sdl.Rect.w o1 != Sdl.Rect.w o2 && Sdl.has_intersection o1 o2 then true else false ;;
+let rec collision o1 o2 = if Sdl.has_intersection o1 o2 then true else false ;;
 
 let rec collision_rec o l =
   match l with
   | [] -> false
   | x::s -> if collision o x then true else collision_rec o s
 ;;
+
+let dist_2d x1 x2 y1 y2 = sqrt ((((float_of_int x1) -. (float_of_int x2))*.((float_of_int x1) -. (float_of_int x2))) +. (((float_of_int y1) -. (float_of_int y2))*.((float_of_int y1) -. (float_of_int y2)))) ;; 

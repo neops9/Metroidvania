@@ -18,3 +18,4 @@ val get_sound_from_list : sound list -> string -> sound
 val get_animation_from_list : animation list -> string -> animation
 val collision : Sdl.rect -> Sdl.rect -> bool
 val collision_rec : Sdl.rect -> Sdl.rect list -> bool
+val dist_2d : int -> int -> int -> int -> float

@@ -43,6 +43,14 @@ let load player file renderer height music =
   let textures = Array.of_list (List.rev (List.fold_left (fun acc x -> let t = Tool.create_texture_from_image renderer x in t::acc) [] texture_list)) in
   let gameobjects = ref [] in
   let characters = ref [] in
+  let t1 = create_texture_from_image renderer "images/goblin_throw1.bmp" in
+  let t2 = create_texture_from_image renderer "images/goblin_throw2.bmp" in
+  let t3 = create_texture_from_image renderer "images/goblin_throw3.bmp" in
+  let t4 = create_texture_from_image renderer "images/goblin_throw4.bmp" in
+  let t5 = create_texture_from_image renderer "images/goblin_throw5.bmp" in
+  let t6 = create_texture_from_image renderer "images/goblin_throw6.bmp" in
+  let t7 = create_texture_from_image renderer "images/goblin_throw7.bmp" in
+  let throw = Animation.create "throw" 100 93 [t1;t2;t3;t4;t5;t6;t7] (4) (1) in
   try
     while true; 
     do
@@ -50,8 +58,12 @@ let load player file renderer height music =
       let animation = Animation.create "Object" (int_of_string line.(4)) (int_of_string line.(5)) [textures.(int_of_string line.(1))] (-1) (-1) in
       if line.(0) = "c"
       then
-        let projectile = Animation.create "projectile" 34 34 [(create_texture_from_image renderer "images/rock.bmp")] (-1) (-1) in
-	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) (2) (1.) animation [animation] [] projectile false 3)::!characters
+        let i1 = create_texture_from_image renderer "images/axe1.bmp" in
+		let i2 = create_texture_from_image renderer "images/axe2.bmp" in
+		let i3 = create_texture_from_image renderer "images/axe3.bmp" in
+		let i4 = create_texture_from_image renderer "images/axe4.bmp" in
+        let projectile = Animation.create "projectile" 46 45 [i1;i2;i3;i4] (5) (-1) in
+	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) (2) (1.) animation [animation;throw] [] projectile false 3)::!characters
       else
 	    gameobjects := (Gameobject.create "Gameobject" (int_of_string line.(2)) ((int_of_string line.(3))) 0 0. animation [animation] (bool_of_string line.(6)) false 1 (-1) [] false)::!gameobjects
     done;
@@ -94,9 +106,9 @@ let player_temp = s.player in
 let update s = 
   let s = (apply_character_damages s) in
   { s with player = Player.update s.player;
-                        gameobjects = List.map (Gameobject.update) s.gameobjects; 
-                        characters = List.fold_left (fun acc x -> if x.life <= 0 then acc else x::acc) [] (List.map (Character.update) (s.characters));
-                        items = List.map (Gameobject.update) s.items }
+           gameobjects = List.map (Gameobject.update) s.gameobjects; 
+           characters = List.fold_left (fun acc x -> if x.life <= 0 then acc else x::acc) [] (List.map (Character.update) (List.map (Character.play_action (player_to_rect s.player)) s.characters));
+           items = List.map (Gameobject.update) s.items }
 ;;
 
 let destroy s =
@@ -143,6 +155,6 @@ let move s =
     let l = List.append l4 (List.append l3 (List.append l1 l2)) in
     { s with player = Player.move (List.append l3 (List.append l1 l2)) characters p; 
              gameobjects = List.map (Gameobject.move l) gameobjects;                        
-             characters = List.map (Character.move l) characters;
+             characters = List.map (Character.move (List.append l4 (List.append l1 l2))) characters;
              items = List.map (Gameobject.move l) s.items }
 ;;

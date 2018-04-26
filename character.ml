@@ -43,24 +43,16 @@ let character_to_rect c = Sdl.Rect.create c.x c.y c.current_animation.dx c.curre
 
 let rec update_projectiles c = { c with projectiles = List.fold_left (fun acc x -> if (Gameobject.get_life_time x) <= 0 then acc else (Gameobject.update x)::acc) [] c.projectiles } ;;
 
+let int_of_bool b = if b then -1 else 1 ;;
+
+let projectile_x b = if b then -60 else 100 ;;
+
 let update c =
 let c = update_projectiles c in
-if c.reload_time <= 0 then
-begin
-let projectile = Gameobject.create "projectile" (c.x + 100) (c.y + 50) (8) (-10.1) c.projectile [c.projectile] true false 1 1000 [] true in
-let c = { c with reload_time = 50; projectiles = projectile::(c.projectiles) } in
-if c.vy != 0. then 
-  { c with vy = c.vy +. 0.5; current_animation = Animation.update c.current_animation; projectile = Animation.update c.projectile; reload_time = c.reload_time - 1; invulnerable_time = c.invulnerable_time - 10 } 
-else 
-  { c with current_animation = Animation.update c.current_animation; reload_time = c.reload_time - 1; projectile = Animation.update c.projectile; invulnerable_time = c.invulnerable_time - 10 } 
-  end
-  else
-  begin
   if c.vy != 0. then 
   { c with vy = c.vy +. 0.5; current_animation = Animation.update c.current_animation; projectile = Animation.update c.projectile; reload_time = c.reload_time - 1; invulnerable_time = c.invulnerable_time - 10 } 
 else 
   { c with current_animation = Animation.update c.current_animation; reload_time = c.reload_time - 1; projectile = Animation.update c.projectile; invulnerable_time = c.invulnerable_time - 10 } 
-  end
 ;;
 
 let rec display r c o =  
@@ -76,17 +68,25 @@ let rec display r c o =
     | Ok () -> List.iter (Gameobject.display r c) (o.projectiles);
 ;;
 
-let play_action c =
-  if c.reload_time <= 0 then 
-  begin 
-    let projectile = Gameobject.create "projectile" (c.x - 50) (c.y + 50) (-8) (-10.) c.projectile [c.projectile] true false 1 1000 [] true in
-    { c with reload_time = 40; projectiles = projectile::(c.projectiles) }
+let play_action p c =
+  if dist_2d (Sdl.Rect.x p) c.x (Sdl.Rect.y p) c.y <= 300. then
+  begin
+    if c.reload_time <= 0 then 
+    begin 
+      let projectile = Gameobject.create "projectile" (c.x + (projectile_x c.flip)) (c.y + 10) (8 * (int_of_bool c.flip)) (-10.1) c.projectile [c.projectile] true false 1 1000 [] true in
+	  { c with vx = 0; current_animation = get_animation_from_list c.animations "throw"; reload_time = 50; projectiles = projectile::(c.projectiles) }
+    end
+    else
+      c
   end
   else
-    c
+  begin
+    if c.vx = 0 then { c with vx = -2 } else c
+  end
 ;;
 
 let move l c =
+  Printf.printf "%d " c.vx ;
   if (c.vx = 0) && (c.vy = 0.) then { c with projectiles = List.map (Gameobject.move l) (c.projectiles) }
   else
   begin
@@ -94,6 +94,7 @@ let move l c =
   if collision_rec (character_to_rect c_x) l
   then
     begin
+      Printf.printf "test";
 	  let c_y = { c with y = c.y + int_of_float(c.vy) } in
 	  if collision_rec (character_to_rect c_y) l then { c with vy = 0.; projectiles = List.map (Gameobject.move l) (c.projectiles) }
 	  else { c_y with vx = (-1)*c.vx; flip = not (c.flip); projectiles = List.map (Gameobject.move l) (c_y.projectiles) }

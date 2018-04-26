@@ -36,7 +36,7 @@ val get_projectiles : character -> gameobject list
 val update : character -> character
 val display : Sdl.renderer -> Sdl.rect -> character -> unit
 val move : Sdl.rect list -> character -> character
-val play_action : character -> character
+val play_action : Sdl.rect -> character -> character
 val destroy : character -> unit
 val character_to_rect : character -> Sdl.rect
 val is_collision : character -> bool
