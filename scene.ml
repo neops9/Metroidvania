@@ -51,7 +51,7 @@ let load player file renderer height music =
       if line.(0) = "c"
       then
         let projectile = Animation.create "projectile" 34 34 [(create_texture_from_image renderer "images/rock.bmp")] (-1) (-1) in
-	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) (-1) (1.) animation [animation] [] projectile false 3)::!characters
+	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) (2) (1.) animation [animation] [] projectile false 3)::!characters
       else
 	    gameobjects := (Gameobject.create "Gameobject" (int_of_string line.(2)) ((int_of_string line.(3))) 0 0. animation [animation] (bool_of_string line.(6)) false 1 (-1) [] false)::!gameobjects
     done;

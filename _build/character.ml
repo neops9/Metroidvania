@@ -96,7 +96,7 @@ let move l c =
     begin
 	  let c_y = { c with y = c.y + int_of_float(c.vy) } in
 	  if collision_rec (character_to_rect c_y) l then { c with vy = 0.; projectiles = List.map (Gameobject.move l) (c.projectiles) }
-	  else { c_y with projectiles = List.map (Gameobject.move l) (c_y.projectiles) }
+	  else { c_y with vx = (-1)*c.vx; flip = not (c.flip); projectiles = List.map (Gameobject.move l) (c_y.projectiles) }
     end
   else
     begin
