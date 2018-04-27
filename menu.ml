@@ -7,11 +7,14 @@ open Sound
 type menu = { renderer : Sdl.renderer;
               bg : Sdl.texture;
               buttons : button list;
-              music : music
-            }
+              music : music }
 ;;
 
-let create renderer bg buttons music = { renderer; bg ; buttons; music } ;;
+let create renderer bg buttons music = { renderer;
+                                         bg ;
+                                         buttons;
+                                         music }
+;;
 
 let load r =
   let bg_texture = Tool.create_texture_from_image r "images/Menu/menu.bmp" in
@@ -33,9 +36,10 @@ let destroy m =
   Music.free m.music;
   Sdl.destroy_texture m.bg;
   let rec delete_buttons l =
-  match l with
-  | [] -> ()
-  | b::s -> Sdl.destroy_texture (Button.get_texture b); delete_buttons s
+    match l with
+    | [] -> ()
+    | b::s -> Sdl.destroy_texture (Button.get_texture b);
+              delete_buttons s
   in
   delete_buttons m.buttons;
 ;;
@@ -48,17 +52,20 @@ let display m =
   match Sdl.render_clear m.renderer with
   | Error (`Msg e) -> Sdl.log "Can't clear renderer: %s" e; exit 1
   | Ok () -> match Sdl.render_copy m.renderer m.bg  with
-			 | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
-             | Ok () -> List.iter (Button.display m.renderer) (m.buttons); Sdl.render_present (m.renderer)
+	     | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
+             | Ok () -> List.iter (Button.display m.renderer) (m.buttons);
+                        Sdl.render_present (m.renderer)
 ;;
 
 exception No_selected_button ;;
 
 let get_selected_button m =
   let rec get_selected_button_rec l =
-  match l with
-  | [] -> raise No_selected_button
-  | b::next -> if Button.is_selected b then b else get_selected_button_rec next
+    match l with
+    | [] -> raise No_selected_button
+    | b::next -> if Button.is_selected b
+                 then b
+                 else get_selected_button_rec next
   in
   get_selected_button_rec m.buttons
 ;;
@@ -67,7 +74,11 @@ let get_action m =
   let rec get_button l =
     match l with
     | [] -> "Jouer"
-    | b::next -> if Button.is_selected b then Button.get_name b else get_button next
+    | b::next -> if Button.is_selected b
+                 then
+                   Button.get_name b
+                 else
+                   get_button next
   in
   get_button m.buttons
 ;;

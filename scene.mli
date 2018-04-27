@@ -7,17 +7,17 @@ open Player
 
 type scene = { renderer : Sdl.renderer;
                width : int;
-	           height : int;
-	           background : Sdl.texture;
-	           music : music;
-			   player : player; 
-		       gameobjects : gameobject list ;
-	           characters : character list ;
-	           items : gameobject list ;
+	       height : int;
+	       background : Sdl.texture;
+	       music : music;
+	       player : player; 
+	       gameobjects : gameobject list ;
+	       characters : character list ;
+	       items : gameobject list ;
                next_scene : string;
                prev_scene : string } 
 ;;
-  
+
 val create : Sdl.renderer -> player -> gameobject list -> character list -> gameobject list ->string -> int -> int -> string -> string -> music -> scene
 val load : player -> string -> Sdl.renderer -> int -> music -> scene
 val get_renderer : scene -> Sdl.renderer

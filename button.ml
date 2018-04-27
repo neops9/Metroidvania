@@ -31,5 +31,5 @@ let rec display r b =
                Sdl.set_render_draw_color r 249 143 51 0; 
                match Sdl.render_fill_rect r (Some ligne) with
                | Error (`Msg e) -> Sdl.log "Can't fill rect: %s" e; exit 1
-			   | Ok () -> ()
+	       | Ok () -> ()
 ;;

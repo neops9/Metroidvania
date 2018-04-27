@@ -5,7 +5,7 @@ open Sound
 open Animation
 
 type gameobject = { name : string;
-				    x : int;
+		    x : int;
                     y : int; 
                     vx : int; 
                     vy : float; 

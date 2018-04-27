@@ -1,5 +1,5 @@
 open Tsdl_mixer
-	
+   
 type sound
 
 val create : string -> Mixer.chunk -> sound

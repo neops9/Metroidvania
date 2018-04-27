@@ -121,69 +121,73 @@ let rec game_loop g s c =
   Sdl.delay 5l;
   let s = keyboard_actions (Scene.move (Scene.update s)) in
   let p = s.player in
-  if p.life = 0 then
-	begin
-	let g = {g with menu = Menu.load g.renderer } in
+  if p.life = 0
+  then
+    begin
+      let g = { g with menu = Menu.load g.renderer } in
       Scene.destroy s;
       Menu.display g.menu;
       menu_loop g      
-	end
+    end
   else
     begin
       Camera.move c p (Scene.get_height s) (Scene.get_width s);
       let event = Sdl.Event.create () in
       match Sdl.poll_event (Some(event)) with
-	  | false -> display_game s c; 
-	             game_loop g s c
+      | false -> display_game s c; 
+	         game_loop g s c
       | true -> match Sdl.Event.(enum (get event typ )) with
                 | `Quit -> Scene.destroy s;
                            quit g 
                 | _ -> display_game s c;
                        game_loop g s c
     end
-and
-  menu_loop g =
-  let event = Sdl.Event.create () in
-  let menu = get_menu g in
-  match Sdl.wait_event (Some(event)) with
-  | Error (`Msg e) -> menu_loop g
-  | Ok() -> match Sdl.Event.(enum (get event typ )) with
-            | `Quit -> Menu.destroy menu;
-                       quit g
-            | `Key_down -> if Sdl.Event.(get event keyboard_keycode) = Sdl.K.return then
-                             begin
-                               match get_action menu with
-                               | "Jouer" -> 
-                                 begin
-                                   let renderer = Menu.get_renderer menu in
-                                   let t1 = create_texture_from_image renderer "images/Raccoon/rock.bmp" in
-								   let t2 = create_texture_from_image renderer "images/Raccoon/rock1.bmp" in
-							       let t3 = create_texture_from_image renderer "images/Raccoon/rock2.bmp" in
-								   let t4 = create_texture_from_image renderer "images/Raccoon/rock3.bmp" in
-								   let t5 = create_texture_from_image renderer "images/Raccoon/rock4.bmp" in
-								   let t6 = create_texture_from_image renderer "images/Raccoon/rock5.bmp" in
-								   let camera = Camera.create (Sdl.Rect.create 0 0 940 700) 1024 768 in
-                                   let projectile = Animation.create "projectile" 34 34 [t1;t2;t3;t4;t5;t6] 1 (-1) in
-                                   let heart_texture = (Tool.create_texture_from_image renderer "images/Objects/life.bmp") in
-                                   let player = Player.create "Player" 10 600 0 2. (List.hd (player_animations renderer)) (player_animations renderer) (sounds_list ()) projectile false 3 heart_texture in 
-				                   let music = Music.create "level1_music" (load_music "music/level.wav") in
-				                   let scene = Scene.load player "scenes/scene1" renderer 768 music in
-  	     				           Menu.destroy g.menu;
-  	     				           Music.play music;
-  	     				           game_loop g scene camera
-				                 end
-                               | "Quitter" -> Menu.destroy menu; 
-                                              quit g
-                               | _ -> menu_loop g
-                             end
-                           else if Sdl.Event.(get event keyboard_keycode) = Sdl.K.up || Sdl.Event.(get event keyboard_keycode) = Sdl.K.down then
-                           begin
-                             let g = { g with menu = update_buttons menu } in
-							 Sound.play (Button.get_sound (Menu.get_selected_button menu));
-                             Menu.display g.menu;
-                             menu_loop g end
-                           else menu_loop g
-            | _ -> menu_loop g
+  and
+    menu_loop g =
+    let event = Sdl.Event.create () in
+    let menu = get_menu g in
+    match Sdl.wait_event (Some(event)) with
+    | Error (`Msg e) -> menu_loop g
+    | Ok() -> match Sdl.Event.(enum (get event typ )) with
+              | `Quit -> Menu.destroy menu;
+                         quit g
+              | `Key_down -> if Sdl.Event.(get event keyboard_keycode) = Sdl.K.return
+                             then
+                               begin
+                                 match get_action menu with
+                                 | "Jouer" -> 
+                                    begin
+                                      let renderer = Menu.get_renderer menu in
+                                      let t1 = create_texture_from_image renderer "images/Raccoon/rock.bmp" in
+				      let t2 = create_texture_from_image renderer "images/Raccoon/rock1.bmp" in
+				      let t3 = create_texture_from_image renderer "images/Raccoon/rock2.bmp" in
+				      let t4 = create_texture_from_image renderer "images/Raccoon/rock3.bmp" in
+				      let t5 = create_texture_from_image renderer "images/Raccoon/rock4.bmp" in
+				      let t6 = create_texture_from_image renderer "images/Raccoon/rock5.bmp" in
+				      let camera = Camera.create (Sdl.Rect.create 0 0 940 700) 1024 768 in
+                                      let projectile = Animation.create "projectile" 34 34 [t1;t2;t3;t4;t5;t6] 1 (-1) in
+                                      let heart_texture = (Tool.create_texture_from_image renderer "images/Objects/life.bmp") in
+                                      let player = Player.create "Player" 10 600 0 2. (List.hd (player_animations renderer)) (player_animations renderer) (sounds_list ()) projectile false 3 heart_texture in 
+				      let music = Music.create "level1_music" (load_music "music/level.wav") in
+				      let scene = Scene.load player "scenes/scene1" renderer 768 music in
+  	     			      Menu.destroy g.menu;
+  	     			      Music.play music;
+  	     			      game_loop g scene camera
+				    end
+                                 | "Quitter" -> Menu.destroy menu; 
+                                                quit g
+                                 | _ -> menu_loop g
+                               end
+                             else if Sdl.Event.(get event keyboard_keycode) = Sdl.K.up || Sdl.Event.(get event keyboard_keycode) = Sdl.K.down then
+                               begin
+                                 let g = { g with menu = update_buttons menu } in
+				 Sound.play (Button.get_sound (Menu.get_selected_button menu));
+                                 Menu.display g.menu;
+                                 menu_loop g end
+                             else menu_loop g
+              | _ -> menu_loop g
 ;;
 
-let launch_game g = Menu.display (get_menu g); menu_loop g ;;
+let launch_game g = Menu.display (get_menu g);
+                    menu_loop g
+;;

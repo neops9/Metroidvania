@@ -20,8 +20,7 @@ type character = { name : string;
                    collision : bool;
                    reload_time : int; 
                    invulnerable_time : int; 
-                   in_air : bool;
-                   has_moved : bool }
+                   in_air : bool }
 
 val create : string -> int -> int -> int -> float -> animation -> animation list -> sound list -> animation -> bool -> int -> character
 val get_x : character -> int

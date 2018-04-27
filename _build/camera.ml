@@ -1,5 +1,4 @@
 open Tsdl
-open Character
 
 type camera = { rect : Sdl.rect ; window_width : int; window_height : int } ;;
 

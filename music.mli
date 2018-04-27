@@ -1,5 +1,5 @@
 open Tsdl_mixer
-	
+   
 type music
 
 val create : string -> Mixer.music -> music
