@@ -166,7 +166,7 @@ and
                                    let heart_texture = (Tool.create_texture_from_image renderer "images/life.bmp") in
                                    let player = Player.create "Player" 10 600 0 2. (List.hd (player_animations renderer)) (player_animations renderer) (sounds_list ()) projectile false 3 heart_texture in 
 				                   let music = Music.create "level1_music" (load_music "music/level.wav") in
-				                   let scene = Scene.load player "level/scene2" renderer 768 music in
+				                   let scene = Scene.load player "level/scene1" renderer 768 music in
   	     				           Menu.destroy g.menu;
   	     				           Music.play music;
   	     				           game_loop g scene camera
