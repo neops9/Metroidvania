@@ -50,7 +50,26 @@ let load player file renderer height music =
   let t5 = create_texture_from_image renderer "images/goblin_throw5.bmp" in
   let t6 = create_texture_from_image renderer "images/goblin_throw6.bmp" in
   let t7 = create_texture_from_image renderer "images/goblin_throw7.bmp" in
-  let throw = Animation.create "throw" 100 93 [t1;t2;t3;t4;t5;t6;t7] (4) (1) in
+  let r1 = create_texture_from_image renderer "images/goblin_run1.bmp" in
+  let r2 = create_texture_from_image renderer "images/goblin_run2.bmp" in
+  let r3 = create_texture_from_image renderer "images/goblin_run3.bmp" in
+  let r4 = create_texture_from_image renderer "images/goblin_run4.bmp" in
+  let r5 = create_texture_from_image renderer "images/goblin_run5.bmp" in
+  let r6 = create_texture_from_image renderer "images/goblin_run6.bmp" in
+  let r7 = create_texture_from_image renderer "images/goblin_run7.bmp" in
+  let r8 = create_texture_from_image renderer "images/goblin_run8.bmp" in
+  let h1 = create_texture_from_image renderer "images/goblin_hurt1.bmp" in
+  let h2 = create_texture_from_image renderer "images/goblin_hurt2.bmp" in
+  let h3 = create_texture_from_image renderer "images/goblin_hurt3.bmp" in
+  let h4 = create_texture_from_image renderer "images/goblin_hurt4.bmp" in
+  let h5 = create_texture_from_image renderer "images/goblin_hurt5.bmp" in
+  let h6 = create_texture_from_image renderer "images/goblin_hurt6.bmp" in
+  let h7 = create_texture_from_image renderer "images/goblin_hurt7.bmp" in
+  let throw = Animation.create "throw" 100 92 [t1;t2;t3;t4;t5;t6;t7] (4) (1) in
+  let run = Animation.create "run" 100 92 [r1;r2;r3;r4;r5;r6;r7;r8] (2) (-1) in
+  let hurt = Animation.create "hurt" 100 92 [h1;h2;h3;h4;h5;h6;h7] (2) (1) in
+  let s1 = Sound.create "hurt" (Tool.load_chunk "sounds/goblin_hurt.wav") in
+  let character_sounds = [s1] in
   try
     while true; 
     do
@@ -63,7 +82,7 @@ let load player file renderer height music =
 		let i3 = create_texture_from_image renderer "images/axe3.bmp" in
 		let i4 = create_texture_from_image renderer "images/axe4.bmp" in
         let projectile = Animation.create "projectile" 46 45 [i1;i2;i3;i4] (5) (-1) in
-	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) (2) (1.) animation [animation;throw] [] projectile false 3)::!characters
+	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) (2) (1.) run [run;throw;hurt] character_sounds projectile false 3)::!characters
       else
 	    gameobjects := (Gameobject.create "Gameobject" (int_of_string line.(2)) ((int_of_string line.(3))) 0 0. animation [animation] (bool_of_string line.(6)) false 1 (-1) [] false)::!gameobjects
     done;
@@ -100,14 +119,15 @@ let rec character_in_list c l =
 
 let rec apply_character_damages s =
 let player_temp = s.player in
-    { s with  player = { player_temp with damaged_characters = [] }; characters = List.map (fun x -> if character_in_list x player_temp.damaged_characters then begin if x.invulnerable_time <= 0 then { x with life = x.life -1; invulnerable_time = 300 } else x end else x) s.characters }
+    { s with  player = { player_temp with damaged_characters = [] }; characters = List.map (fun x -> if character_in_list x player_temp.damaged_characters then begin if x.invulnerable_time <= 0 then begin Sound.play (Tool.get_sound_from_list x.sounds "hurt"); { x with life = x.life -1; current_animation = get_animation_from_list x.animations "hurt"; invulnerable_time = 300 } end else x end else x) s.characters }
 ;;
 
 let update s = 
   let s = (apply_character_damages s) in
+  let characters = List.map (Character.play_action (player_to_rect s.player)) s.characters in
   { s with player = Player.update s.player;
            gameobjects = List.map (Gameobject.update) s.gameobjects; 
-           characters = List.fold_left (fun acc x -> if x.life <= 0 then acc else x::acc) [] (List.map (Character.update) (List.map (Character.play_action (player_to_rect s.player)) s.characters));
+           characters = List.fold_left (fun acc x -> if x.life <= 0 then acc else x::acc) [] (List.map (Character.update) characters);
            items = List.map (Gameobject.update) s.items }
 ;;
 
@@ -127,8 +147,8 @@ let change_scene s1 s2 x =
 let rec move_projectiles_player p cl gl = 
 match cl, gl with
 | [], [] -> p
-| c::s, _ -> if collision_rec (player_to_rect p) (List.fold_left (fun acc o -> (gameobject_to_rect { o with x = (Gameobject.get_x o) + (Gameobject.get_vx o); y = (Gameobject.get_y o) + int_of_float((Gameobject.get_vy o)) })::acc) [] (Character.get_projectiles c)) then { p with life = p.life - 1 } else move_projectiles_player p s gl
-| _, g::s -> if collision_rec (player_to_rect p) (List.fold_left (fun acc o -> (gameobject_to_rect { o with x = (Gameobject.get_x o) + (Gameobject.get_vx o); y = (Gameobject.get_y o) + int_of_float((Gameobject.get_vy o)) })::acc) [] (Gameobject.get_projectiles g)) then { p with life = p.life - 1 } else move_projectiles_player p cl s
+| c::s, _ -> if Player.get_invulnerable_time p <= 0 && collision_rec (player_to_rect p) (List.fold_left (fun acc o -> (gameobject_to_rect { o with x = (Gameobject.get_x o) + (Gameobject.get_vx o); y = (Gameobject.get_y o) + int_of_float((Gameobject.get_vy o)) })::acc) [] (Character.get_projectiles c)) then begin Sound.play (Tool.get_sound_from_list p.sounds "hurt"); { p with current_animation = get_animation_from_list p.animations "hurt"; life = p.life - 1; invulnerable_time = 2000 } end else move_projectiles_player p s gl
+| _, g::s -> if Player.get_invulnerable_time p <= 0 && collision_rec (player_to_rect p) (List.fold_left (fun acc o -> (gameobject_to_rect { o with x = (Gameobject.get_x o) + (Gameobject.get_vx o); y = (Gameobject.get_y o) + int_of_float((Gameobject.get_vy o)) })::acc) [] (Gameobject.get_projectiles g)) then begin Sound.play (Tool.get_sound_from_list p.sounds "hurt"); { p with current_animation = get_animation_from_list p.animations "hurt"; life = p.life - 1; invulnerable_time = 2000 } end else move_projectiles_player p cl s
 ;;
 
 let move_projectiles_gameobjects gl p = 
@@ -136,11 +156,11 @@ List.map (fun g -> if collision_rec (gameobject_to_rect g) (List.fold_left (fun 
 ;;
 
 let move_projectiles_characters cl p = 
-List.map (fun c -> if collision_rec (character_to_rect c) (List.fold_left (fun acc o -> (gameobject_to_rect { o with x = (Gameobject.get_x o) + (Gameobject.get_vx o); y = (Gameobject.get_y o) + int_of_float((Gameobject.get_vy o)) })::acc) [] (Player.get_projectiles p)) then { c with life = c.life - 1 } else c) cl
+List.map (fun c -> if collision_rec (character_to_rect c) (List.fold_left (fun acc o -> (gameobject_to_rect { o with x = (Gameobject.get_x o) + (Gameobject.get_vx o); y = (Gameobject.get_y o) + int_of_float((Gameobject.get_vy o)) })::acc) [] (Player.get_projectiles p)) then begin Sound.play (Tool.get_sound_from_list c.sounds "hurt"); { c with life = c.life - 1; current_animation = get_animation_from_list c.animations "hurt"; invulnerable_time = 300 } end else c) cl
 ;;
 
 let move s =
-  let gameobjects = move_projectiles_gameobjects s.gameobjects s.player in
+  let gameobjects = s.gameobjects in
   let characters = move_projectiles_characters s.characters s.player in
   let p = move_projectiles_player s.player s.characters s.gameobjects in
   if (p.x > s.width) then

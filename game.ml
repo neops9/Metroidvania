@@ -55,7 +55,8 @@ let sounds_list () =
   let s2 = Sound.create "throw" (Tool.load_chunk "sounds/throw.wav") in
   let s3 = Sound.create "lose" (Tool.load_chunk "sounds/lose.wav") in
   let s4 = Sound.create "gameover" (Tool.load_chunk "sounds/gameover.wav") in
-  [s1;s2;s3;s4]
+  let s5 = Sound.create "hurt" (Tool.load_chunk "sounds/raccoon_hurt.wav") in
+  [s1;s2;s3;s4;s5]
 ;;
 
 let player_animations r = 
@@ -105,11 +106,14 @@ let player_animations r =
   let tr10 = create_texture_from_image r "images/throw10.bmp" in
   let tr11 = create_texture_from_image r "images/throw11.bmp" in
   let tr12 = create_texture_from_image r "images/throw12.bmp" in
+  let h1 = create_texture_from_image r "images/hurt1.bmp" in
+  let h2 = create_texture_from_image r "images/hurt2.bmp" in
   let a1 = Animation.create "idle" 79 100 [i1;i2;i3;i4;i5;i6;i7;i8;i9;i10;i11] 3 (-1) in
   let a2 = Animation.create "run" 79 100 [t1;t2;t3;t4;t5;t6;t7;t8;t9;t10;t11;t12] 1 (-1) in
   let a3 = Animation.create "jump" 79 100 [j1;j2;j3;j4;j5;j6;j7;j8;j9;j10;j11] 5 1 in
-  let a4 = Animation.create "throw" 80 100 [tr1;tr2;tr3;tr4;tr5;tr6;tr7;tr8;tr9;tr10;tr11;tr12] 2 1 in
-  [a1; a2; a3; a4]
+  let a4 = Animation.create "throw" 79 100 [tr1;tr2;tr3;tr4;tr5;tr6;tr7;tr8;tr9;tr10;tr11;tr12] 2 1 in
+  let a5 = Animation.create "hurt" 80 100 [h1; h2] 6 10 in
+  [a1; a2; a3; a4; a5]
 ;;
 
 let rec game_loop g s c =

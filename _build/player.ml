@@ -41,6 +41,7 @@ let get_vy p = p.vy ;;
 let get_sounds p = p.sounds ;;
 let get_current_animation p = p.current_animation ;;
 let get_projectiles p = p.projectiles ;;
+let get_invulnerable_time p = p.invulnerable_time ;;
 
 let player_to_rect p = Sdl.Rect.create p.x p.y p.current_animation.dx p.current_animation.dy ;;
 
@@ -58,10 +59,15 @@ else if not (p.vy = 0.) then
 else
   if p.vx != 0 then
   begin
+  if p.current_animation.name = "hurt" && p.current_animation.loop > 0 then
+  { p with vy = p.vy +. 0.5; current_animation = Animation.update p.current_animation; reload_time = p.reload_time - 1; projectile = Animation.update p.projectile; invulnerable_time = p.invulnerable_time - 10 }
+  else
+  begin
   if p.current_animation.name = "run" then
     { p with vy = p.vy +. 0.5; current_animation = Animation.update p.current_animation; reload_time = p.reload_time - 1; projectile = Animation.update p.projectile; invulnerable_time = p.invulnerable_time - 10 }
   else
     { p with vy = p.vy +. 0.5; current_animation = get_animation_from_list p.animations "run"; reload_time = p.reload_time - 1; projectile = Animation.update p.projectile; invulnerable_time = p.invulnerable_time - 10 }
+  end
   end
   else 
   begin

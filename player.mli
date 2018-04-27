@@ -44,3 +44,4 @@ val destroy : player -> unit
 val get_current_animation : player -> animation
 val player_to_rect : player -> Sdl.rect
 val get_projectiles : player -> gameobject list
+val get_invulnerable_time : player -> int
