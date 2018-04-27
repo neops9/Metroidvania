@@ -17,7 +17,6 @@ type gameobject = { name : string;
                     life_time : int;
                     sounds : sound list;
                     projectiles : gameobject list;
-                    has_moved : bool;
                     is_projectile : bool }
 ;;
 

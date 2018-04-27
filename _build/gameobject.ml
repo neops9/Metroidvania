@@ -18,11 +18,10 @@ type gameobject = { name : string;
                     life_time : int;
                     sounds : sound list;
                     projectiles : gameobject list;
-                    has_moved : bool;
                     is_projectile : bool }
 ;;
 
-let create name x y vx vy current_animation animations collision flip life life_time sounds is_projectile = { name; x; y; vx; vy; current_animation; animations; collision; flip; life; life_time; sounds; projectiles = []; has_moved = false; is_projectile } ;;
+let create name x y vx vy current_animation animations collision flip life life_time sounds is_projectile = { name; x; y; vx; vy; current_animation; animations; collision; flip; life; life_time; sounds; projectiles = []; is_projectile } ;;
 
 let get_x o = o.x ;;
 let get_y o = o.y ;;

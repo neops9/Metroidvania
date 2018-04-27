@@ -14,10 +14,10 @@ type menu = { renderer : Sdl.renderer;
 let create renderer bg buttons music = { renderer; bg ; buttons; music } ;;
 
 let load r =
-  let bg_texture = Tool.create_texture_from_image r "images/menu.bmp" in
-  let b1_texture = Tool.create_texture_from_image r "images/bouton_jouer.bmp" in
-  let b2_texture = Tool.create_texture_from_image r "images/bouton_quitter.bmp" in
-  let s1 = Sound.create "bouton" (Tool.load_chunk "sounds/bouton_select.wav") in
+  let bg_texture = Tool.create_texture_from_image r "images/Menu/menu.bmp" in
+  let b1_texture = Tool.create_texture_from_image r "images/Menu/bouton_jouer.bmp" in
+  let b2_texture = Tool.create_texture_from_image r "images/Menu/bouton_quitter.bmp" in
+  let s1 = Sound.create "bouton" (Tool.load_chunk "sounds/Menu/bouton_select.wav") in
   let b1 = Button.create "Jouer" b1_texture 420 350 168 78 s1 true in
   let b2 = Button.create "Quitter" b2_texture 403 470 207 78 s1 false in
   let music = Music.create "menu_music" (Tool.load_music "music/menu.wav") in
@@ -45,10 +45,11 @@ let update_buttons m = let buttons = List.map (fun x -> set_selected x (not (is_
 ;;
 
 let display m =
-  Sdl.render_clear m.renderer;
-  match Sdl.render_copy m.renderer m.bg  with
-  | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
-  | Ok () -> List.iter (Button.display m.renderer) (m.buttons); Sdl.render_present (m.renderer)
+  match Sdl.render_clear m.renderer with
+  | Error (`Msg e) -> Sdl.log "Can't clear renderer: %s" e; exit 1
+  | Ok () -> match Sdl.render_copy m.renderer m.bg  with
+			 | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
+             | Ok () -> List.iter (Button.display m.renderer) (m.buttons); Sdl.render_present (m.renderer)
 ;;
 
 exception No_selected_button ;;

@@ -22,7 +22,6 @@ type player = { name : string;
                 reload_time : int; 
                 invulnerable_time : int; 
                 in_air : bool;
-                has_moved : bool;
                 heart_texture : Sdl.texture;
                 damaged_characters : character list }
 ;;

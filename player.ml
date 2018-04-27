@@ -23,12 +23,11 @@ type player = { name : string;
                 reload_time : int;
                 invulnerable_time : int; 
                 in_air : bool;
-                has_moved : bool;
                 heart_texture : Sdl.texture;
                 damaged_characters : character list }
 ;;
 
-let create name x y vx vy current_animation animations sounds projectile flip life heart_texture = { name; x; y; vx; vy; current_animation; animations; sounds; projectile; projectiles = []; flip; life; collision = true; reload_time = 0; invulnerable_time = 0; in_air = false; has_moved = false; heart_texture; damaged_characters = [] } ;;
+let create name x y vx vy current_animation animations sounds projectile flip life heart_texture = { name; x; y; vx; vy; current_animation; animations; sounds; projectile; projectiles = []; flip; life; collision = true; reload_time = 0; invulnerable_time = 0; in_air = false; heart_texture; damaged_characters = [] } ;;
 
 let get_life p = p.life ;;
 let get_x p = p.x ;;

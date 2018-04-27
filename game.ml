@@ -24,63 +24,63 @@ let get_window g = g.window ;;
 let get_renderer g = g.renderer ;;
 
 let sounds_list () = 
-  let s1 = Sound.create "jump" (Tool.load_chunk "sounds/jump.wav") in
-  let s2 = Sound.create "throw" (Tool.load_chunk "sounds/throw.wav") in
-  let s3 = Sound.create "lose" (Tool.load_chunk "sounds/lose.wav") in
-  let s4 = Sound.create "gameover" (Tool.load_chunk "sounds/gameover.wav") in
-  let s5 = Sound.create "hurt" (Tool.load_chunk "sounds/raccoon_hurt.wav") in
+  let s1 = Sound.create "jump" (Tool.load_chunk "sounds/Raccoon/jump.wav") in
+  let s2 = Sound.create "throw" (Tool.load_chunk "sounds/Raccoon/throw.wav") in
+  let s3 = Sound.create "lose" (Tool.load_chunk "sounds/Raccoon/lose.wav") in
+  let s4 = Sound.create "gameover" (Tool.load_chunk "sounds/Raccoon/gameover.wav") in
+  let s5 = Sound.create "hurt" (Tool.load_chunk "sounds/Raccoon/raccoon_hurt.wav") in
   [s1;s2;s3;s4;s5]
 ;;
 
 let player_animations r = 
-  let t1 = create_texture_from_image r "images/run1.bmp" in
-  let t2 = create_texture_from_image r "images/run2.bmp" in
-  let t3 = create_texture_from_image r "images/run3.bmp" in
-  let t4 = create_texture_from_image r "images/run4.bmp" in
-  let t5 = create_texture_from_image r "images/run5.bmp" in
-  let t6 = create_texture_from_image r "images/run6.bmp" in
-  let t7 = create_texture_from_image r "images/run7.bmp" in
-  let t8 = create_texture_from_image r "images/run8.bmp" in
-  let t9 = create_texture_from_image r "images/run9.bmp" in
-  let t10 = create_texture_from_image r "images/run10.bmp" in
-  let t11 = create_texture_from_image r "images/run11.bmp" in
-  let t12 = create_texture_from_image r "images/run12.bmp" in
-  let i1 = create_texture_from_image r "images/idle1.bmp" in
-  let i2 = create_texture_from_image r "images/idle2.bmp" in
-  let i3 = create_texture_from_image r "images/idle3.bmp" in
-  let i4 = create_texture_from_image r "images/idle4.bmp" in
-  let i5 = create_texture_from_image r "images/idle5.bmp" in
-  let i6 = create_texture_from_image r "images/idle6.bmp" in
-  let i7 = create_texture_from_image r "images/idle7.bmp" in
-  let i8 = create_texture_from_image r "images/idle8.bmp" in
-  let i9 = create_texture_from_image r "images/idle9.bmp" in
-  let i10 = create_texture_from_image r "images/idle10.bmp" in
-  let i11 = create_texture_from_image r "images/idle11.bmp" in
-  let j1 = create_texture_from_image r "images/jump1.bmp" in
-  let j2 = create_texture_from_image r "images/jump2.bmp" in
-  let j3 = create_texture_from_image r "images/jump3.bmp" in
-  let j4 = create_texture_from_image r "images/jump4.bmp" in
-  let j5 = create_texture_from_image r "images/jump5.bmp" in
-  let j6 = create_texture_from_image r "images/jump6.bmp" in
-  let j7 = create_texture_from_image r "images/jump7.bmp" in
-  let j8 = create_texture_from_image r "images/jump8.bmp" in
-  let j9 = create_texture_from_image r "images/jump9.bmp" in
-  let j10 = create_texture_from_image r "images/jump10.bmp" in
-  let j11 = create_texture_from_image r "images/jump11.bmp" in
-  let tr1 = create_texture_from_image r "images/throw1.bmp" in
-  let tr2 = create_texture_from_image r "images/throw2.bmp" in
-  let tr3 = create_texture_from_image r "images/throw3.bmp" in
-  let tr4 = create_texture_from_image r "images/throw4.bmp" in
-  let tr5 = create_texture_from_image r "images/throw5.bmp" in
-  let tr6 = create_texture_from_image r "images/throw6.bmp" in
-  let tr7 = create_texture_from_image r "images/throw7.bmp" in
-  let tr8 = create_texture_from_image r "images/throw8.bmp" in
-  let tr9 = create_texture_from_image r "images/throw9.bmp" in
-  let tr10 = create_texture_from_image r "images/throw10.bmp" in
-  let tr11 = create_texture_from_image r "images/throw11.bmp" in
-  let tr12 = create_texture_from_image r "images/throw12.bmp" in
-  let h1 = create_texture_from_image r "images/hurt1.bmp" in
-  let h2 = create_texture_from_image r "images/hurt2.bmp" in
+  let t1 = create_texture_from_image r "images/Raccoon/run1.bmp" in
+  let t2 = create_texture_from_image r "images/Raccoon/run2.bmp" in
+  let t3 = create_texture_from_image r "images/Raccoon/run3.bmp" in
+  let t4 = create_texture_from_image r "images/Raccoon/run4.bmp" in
+  let t5 = create_texture_from_image r "images/Raccoon/run5.bmp" in
+  let t6 = create_texture_from_image r "images/Raccoon/run6.bmp" in
+  let t7 = create_texture_from_image r "images/Raccoon/run7.bmp" in
+  let t8 = create_texture_from_image r "images/Raccoon/run8.bmp" in
+  let t9 = create_texture_from_image r "images/Raccoon/run9.bmp" in
+  let t10 = create_texture_from_image r "images/Raccoon/run10.bmp" in
+  let t11 = create_texture_from_image r "images/Raccoon/run11.bmp" in
+  let t12 = create_texture_from_image r "images/Raccoon/run12.bmp" in
+  let i1 = create_texture_from_image r "images/Raccoon/idle1.bmp" in
+  let i2 = create_texture_from_image r "images/Raccoon/idle2.bmp" in
+  let i3 = create_texture_from_image r "images/Raccoon/idle3.bmp" in
+  let i4 = create_texture_from_image r "images/Raccoon/idle4.bmp" in
+  let i5 = create_texture_from_image r "images/Raccoon/idle5.bmp" in
+  let i6 = create_texture_from_image r "images/Raccoon/idle6.bmp" in
+  let i7 = create_texture_from_image r "images/Raccoon/idle7.bmp" in
+  let i8 = create_texture_from_image r "images/Raccoon/idle8.bmp" in
+  let i9 = create_texture_from_image r "images/Raccoon/idle9.bmp" in
+  let i10 = create_texture_from_image r "images/Raccoon/idle10.bmp" in
+  let i11 = create_texture_from_image r "images/Raccoon/idle11.bmp" in
+  let j1 = create_texture_from_image r "images/Raccoon/jump1.bmp" in
+  let j2 = create_texture_from_image r "images/Raccoon/jump2.bmp" in
+  let j3 = create_texture_from_image r "images/Raccoon/jump3.bmp" in
+  let j4 = create_texture_from_image r "images/Raccoon/jump4.bmp" in
+  let j5 = create_texture_from_image r "images/Raccoon/jump5.bmp" in
+  let j6 = create_texture_from_image r "images/Raccoon/jump6.bmp" in
+  let j7 = create_texture_from_image r "images/Raccoon/jump7.bmp" in
+  let j8 = create_texture_from_image r "images/Raccoon/jump8.bmp" in
+  let j9 = create_texture_from_image r "images/Raccoon/jump9.bmp" in
+  let j10 = create_texture_from_image r "images/Raccoon/jump10.bmp" in
+  let j11 = create_texture_from_image r "images/Raccoon/jump11.bmp" in
+  let tr1 = create_texture_from_image r "images/Raccoon/throw1.bmp" in
+  let tr2 = create_texture_from_image r "images/Raccoon/throw2.bmp" in
+  let tr3 = create_texture_from_image r "images/Raccoon/throw3.bmp" in
+  let tr4 = create_texture_from_image r "images/Raccoon/throw4.bmp" in
+  let tr5 = create_texture_from_image r "images/Raccoon/throw5.bmp" in
+  let tr6 = create_texture_from_image r "images/Raccoon/throw6.bmp" in
+  let tr7 = create_texture_from_image r "images/Raccoon/throw7.bmp" in
+  let tr8 = create_texture_from_image r "images/Raccoon/throw8.bmp" in
+  let tr9 = create_texture_from_image r "images/Raccoon/throw9.bmp" in
+  let tr10 = create_texture_from_image r "images/Raccoon/throw10.bmp" in
+  let tr11 = create_texture_from_image r "images/Raccoon/throw11.bmp" in
+  let tr12 = create_texture_from_image r "images/Raccoon/throw12.bmp" in
+  let h1 = create_texture_from_image r "images/Raccoon/hurt1.bmp" in
+  let h2 = create_texture_from_image r "images/Raccoon/hurt2.bmp" in
   let a1 = Animation.create "idle" 79 100 [i1;i2;i3;i4;i5;i6;i7;i8;i9;i10;i11] 3 (-1) in
   let a2 = Animation.create "run" 79 100 [t1;t2;t3;t4;t5;t6;t7;t8;t9;t10;t11;t12] 1 (-1) in
   let a3 = Animation.create "jump" 79 100 [j1;j2;j3;j4;j5;j6;j7;j8;j9;j10;j11] 5 1 in
@@ -103,10 +103,11 @@ let display_user_interface r c p =
 let display_game s c =
   let r = Scene.get_renderer s in
   let rect = Camera.get_rect c in
-  Sdl.render_clear r;
-  Scene.display s rect;
-  display_user_interface r rect (Scene.get_player s);
-  Sdl.render_present r;
+  match Sdl.render_clear r with
+  | Error (`Msg e) -> Sdl.log "Can't clear renderer: %s" e; exit 1
+  | Ok () -> Scene.display s rect;
+             display_user_interface r rect (Scene.get_player s);
+             Sdl.render_present r
 ;;
 
 let quit g =
@@ -155,18 +156,18 @@ and
                                | "Jouer" -> 
                                  begin
                                    let renderer = Menu.get_renderer menu in
-                                   let t1 = create_texture_from_image renderer "images/rock.bmp" in
-								   let t2 = create_texture_from_image renderer "images/rock1.bmp" in
-							       let t3 = create_texture_from_image renderer "images/rock2.bmp" in
-								   let t4 = create_texture_from_image renderer "images/rock3.bmp" in
-								   let t5 = create_texture_from_image renderer "images/rock4.bmp" in
-								   let t6 = create_texture_from_image renderer "images/rock5.bmp" in
+                                   let t1 = create_texture_from_image renderer "images/Raccoon/rock.bmp" in
+								   let t2 = create_texture_from_image renderer "images/Raccoon/rock1.bmp" in
+							       let t3 = create_texture_from_image renderer "images/Raccoon/rock2.bmp" in
+								   let t4 = create_texture_from_image renderer "images/Raccoon/rock3.bmp" in
+								   let t5 = create_texture_from_image renderer "images/Raccoon/rock4.bmp" in
+								   let t6 = create_texture_from_image renderer "images/Raccoon/rock5.bmp" in
 								   let camera = Camera.create (Sdl.Rect.create 0 0 940 700) 1024 768 in
                                    let projectile = Animation.create "projectile" 34 34 [t1;t2;t3;t4;t5;t6] 1 (-1) in
-                                   let heart_texture = (Tool.create_texture_from_image renderer "images/life.bmp") in
+                                   let heart_texture = (Tool.create_texture_from_image renderer "images/Objects/life.bmp") in
                                    let player = Player.create "Player" 10 600 0 2. (List.hd (player_animations renderer)) (player_animations renderer) (sounds_list ()) projectile false 3 heart_texture in 
 				                   let music = Music.create "level1_music" (load_music "music/level.wav") in
-				                   let scene = Scene.load player "level/scene1" renderer 768 music in
+				                   let scene = Scene.load player "scenes/scene1" renderer 768 music in
   	     				           Menu.destroy g.menu;
   	     				           Music.play music;
   	     				           game_loop g scene camera
