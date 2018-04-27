@@ -82,7 +82,7 @@ let load player file renderer height music =
 		let i3 = create_texture_from_image renderer "images/axe3.bmp" in
 		let i4 = create_texture_from_image renderer "images/axe4.bmp" in
         let projectile = Animation.create "projectile" 46 45 [i1;i2;i3;i4] (5) (-1) in
-	    characters := (Character.create "Character" (int_of_string line.(2)) (int_of_string line.(3)) (2) (1.) run [run;throw;hurt] character_sounds projectile false 3)::!characters
+	    characters := (Character.create line.(7) (int_of_string line.(2)) (int_of_string line.(3)) (2) (1.) run [run;throw;hurt] character_sounds projectile false 3)::!characters
       else
 	    gameobjects := (Gameobject.create "Gameobject" (int_of_string line.(2)) ((int_of_string line.(3))) 0 0. animation [animation] (bool_of_string line.(6)) false 1 (-1) [] false)::!gameobjects
     done;

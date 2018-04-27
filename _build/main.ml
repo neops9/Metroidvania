@@ -14,8 +14,7 @@ let main () = match Sdl.init Sdl.Init.(video + audio) with
              | Ok w -> Sdl.set_window_icon w (Tool.create_surface_from_image "images/mushroom1.bmp");
 				       match Sdl.create_renderer ~flags:Sdl.Renderer.(accelerated + presentvsync) w with
                        | Error (`Msg e) ->  Sdl.log "Can't create renderer error: %s" e; exit 1
-                       | Ok r -> Sdl.set_window_resizable w true;
-                                 match Mixer.open_audio 44100 Sdl.Audio.s16_sys 2 2048 with
+                       | Ok r -> match Mixer.open_audio 44100 Sdl.Audio.s16_sys 2 2048 with
 				                 | Error (`Msg e) -> Sdl.log "Can't open audio: %s" e; exit 1
 				                 | Ok () -> let menu = Menu.load r in
 											let game = Game.create w r menu in

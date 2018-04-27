@@ -23,33 +23,6 @@ let get_menu g = g.menu ;;
 let get_window g = g.window ;;
 let get_renderer g = g.renderer ;;
 
-let display_user_interface r c p = 
-  let offset = ref 15 in
-  for i = 1 to Player.get_life p do
-    let rect_dest = Sdl.Rect.create !offset 15 50 50 in
-    offset := !offset + 60;
-    match Sdl.render_copy ~dst:rect_dest r p.heart_texture with
-    | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
-    | Ok () -> ()
-  done;
-;;
-
-let display_game s c =
-  let r = Scene.get_renderer s in
-  let rect = Camera.get_rect c in
-  Sdl.render_clear r;
-  Scene.display s rect;
-  display_user_interface r rect (Scene.get_player s);
-  Sdl.render_present r;
-;;
-
-let quit g =
-  Sdl.destroy_renderer (get_renderer g);
-  Sdl.destroy_window (get_window g);
-  Mixer.quit ();
-  Sdl.quit ()
-;;
-
 let sounds_list () = 
   let s1 = Sound.create "jump" (Tool.load_chunk "sounds/jump.wav") in
   let s2 = Sound.create "throw" (Tool.load_chunk "sounds/throw.wav") in
@@ -116,6 +89,33 @@ let player_animations r =
   [a1; a2; a3; a4; a5]
 ;;
 
+let display_user_interface r c p = 
+  let offset = ref 15 in
+  for i = 1 to Player.get_life p do
+    let rect_dest = Sdl.Rect.create !offset 15 50 50 in
+    offset := !offset + 60;
+    match Sdl.render_copy ~dst:rect_dest r p.heart_texture with
+    | Error (`Msg e) ->  Sdl.log "Can't fill image error: %s" e; exit 1 
+    | Ok () -> ()
+  done;
+;;
+
+let display_game s c =
+  let r = Scene.get_renderer s in
+  let rect = Camera.get_rect c in
+  Sdl.render_clear r;
+  Scene.display s rect;
+  display_user_interface r rect (Scene.get_player s);
+  Sdl.render_present r;
+;;
+
+let quit g =
+  Sdl.destroy_renderer (get_renderer g);
+  Sdl.destroy_window (get_window g);
+  Mixer.quit ();
+  Sdl.quit ()
+;;
+
 let rec game_loop g s c =
   Sdl.delay 5l;
   let s = keyboard_actions (Scene.move (Scene.update s)) in
@@ -166,7 +166,7 @@ and
                                    let heart_texture = (Tool.create_texture_from_image renderer "images/life.bmp") in
                                    let player = Player.create "Player" 10 600 0 2. (List.hd (player_animations renderer)) (player_animations renderer) (sounds_list ()) projectile false 3 heart_texture in 
 				                   let music = Music.create "level1_music" (load_music "music/level.wav") in
-				                   let scene = Scene.load player "level/scene1" renderer 768 music in
+				                   let scene = Scene.load player "level/scene2" renderer 768 music in
   	     				           Menu.destroy g.menu;
   	     				           Music.play music;
   	     				           game_loop g scene camera
