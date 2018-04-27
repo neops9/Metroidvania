@@ -28,8 +28,9 @@ let rec display r b =
   | Ok () -> if is_selected b
              then
                let ligne = Sdl.Rect.create b.x (b.y + 73) b.dx 5 in
-               Sdl.set_render_draw_color r 249 143 51 0; 
-               match Sdl.render_fill_rect r (Some ligne) with
-               | Error (`Msg e) -> Sdl.log "Can't fill rect: %s" e; exit 1
-	       | Ok () -> ()
+               match Sdl.set_render_draw_color r 249 143 51 0 with
+               | Error (`Msg e) -> Sdl.log "Can't set render draw color: %s" e; exit 1
+               | Ok () -> match Sdl.render_fill_rect r (Some ligne) with
+                          | Error (`Msg e) -> Sdl.log "Can't fill rect: %s" e; exit 1
+	                  | Ok () -> ()
 ;;
